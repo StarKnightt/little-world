@@ -64,8 +64,13 @@ function fromQuote(said: string): Fix | null {
  * The model copies the user's words for each task into `said`. If those words contain exactly one
  * unambiguous time and it disagrees with what the model picked, trust the user's words.
  */
-export function quoteCheck(m: ModelRoutine): { routine: ModelRoutine; fixes: number } {
+export function quoteCheck(m: ModelRoutine, source = ''): { routine: ModelRoutine; fixes: number } {
   let fixes = 0;
+  // a dose number the person never wrote is made up; drop it rather than show a wrong amount
+  const WORDS = ['a|an|one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  const written = new Set(source.match(/\d+(?:\.\d+)?/g) ?? []);
+  WORDS.forEach((w, i) => new RegExp(`\\b(${w})\\b`, 'i').test(source) && written.add(String(i + 1)));
+  const invented = (dose: string) => source !== '' && (dose.match(/\d+(?:\.\d+)?/g) ?? []).some((n) => !written.has(n));
   // "before lunch and before dinner" quoted on a single task means two tasks
   const split: ModelRoutine['tasks'] = [];
   for (const t of m.tasks) {
@@ -78,6 +83,10 @@ export function quoteCheck(m: ModelRoutine): { routine: ModelRoutine; fixes: num
   }
   const tasks = split.map((t0) => {
     let t = /^(unknown|none|n\/?a|-)$/i.test(t0.dose.trim()) ? { ...t0, dose: '' } : t0;
+    if (invented(t.dose)) {
+      fixes++;
+      t = { ...t, dose: '' };
+    }
     const foods = FOOD_PHRASES.filter(([re]) => re.test(t.said)).map(([, f]) => f);
     if (foods.length === 1 && foods[0] !== t.food) {
       fixes++;

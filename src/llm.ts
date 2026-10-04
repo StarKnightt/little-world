@@ -142,7 +142,7 @@ export async function parseRoutine(text: string, opts: { mode?: Mode; onToken?: 
       const json = constrained ? JSON.parse(raw) : extractJson(raw);
       const res = ModelRoutineZ.safeParse(json);
       if (res.success) {
-        const checked = quoteCheck(res.data);
+        const checked = quoteCheck(res.data, text);
         return { ok: true, spec: resolveRoutine(checked.routine), modelOnly: resolveRoutine(res.data), fixes: checked.fixes, raw, stats, attempts: attempt };
       }
       error = res.error.issues.slice(0, 3).map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
