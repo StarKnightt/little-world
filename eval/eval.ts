@@ -42,7 +42,8 @@ const log = (s: string) => {
   for (const c of CASES.slice(0, limit)) {
     const r = await parseRoutine(c.text, { mode });
     const s = score(c, r.spec);
-    rows.push({ id: c.id, ok: r.ok, attempts: r.attempts, error: r.error, ...s, expected: c.expect.length, got: r.spec?.tasks.length ?? 0, stats: r.stats, raw: r.raw, spec: r.spec });
+    const m = score(c, r.modelOnly);
+    rows.push({ id: c.id, ok: r.ok, attempts: r.attempts, error: r.error, ...s, modelOnly: m, fixes: r.fixes ?? 0, expected: c.expect.length, got: r.spec?.tasks.length ?? 0, stats: r.stats, raw: r.raw, spec: r.spec });
     log(`${c.id}: ok=${r.ok} attempts=${r.attempts} count=${s.countOk} time=${s.timeHits}/${c.expect.length} food=${s.foodHits}/${s.foodTotal} tps=${r.stats.decodeTps.toFixed(1)} ms=${Math.round(r.stats.ms)} ${r.error ?? ''}`);
   }
   return { modelId, mode, gpu, loadMs, rows };

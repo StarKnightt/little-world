@@ -1,7 +1,8 @@
 import type { MLCEngineInterface, InitProgressReport } from '@mlc-ai/web-llm';
 import { askPrompt, routinePrompt } from './prompts';
 import { ROUTINE_EBNF } from './grammar';
-import { extractJson, ROUTINE_JSON_SCHEMA, RoutineZ, type Routine, type RoutineSpec } from './schema';
+import { quoteCheck } from './quote-check';
+import { extractJson, ModelRoutineZ, resolveRoutine, ROUTINE_JSON_SCHEMA, type Routine, type RoutineSpec } from './schema';
 
 export interface ModelInfo {
   id: string;
@@ -92,6 +93,9 @@ function readStats(usage: any, t0: number): Stats {
 export interface ParseResult {
   ok: boolean;
   spec?: RoutineSpec;
+  /** what Gemma alone produced, before the quote check */
+  modelOnly?: RoutineSpec;
+  fixes?: number;
   raw: string;
   error?: string;
   stats: Stats;
@@ -116,7 +120,7 @@ export async function parseRoutine(text: string, opts: { mode?: Mode; onToken?: 
         : `${routinePrompt(text)}\n\nYour last answer was rejected because: ${error}. Reply with corrected JSON only.`;
     await engine.resetChat();
     const stream = await engine.chat.completions.create({
-      messages: [{ role: 'user', content: constrained ? content : `${content}\n\nReply with JSON only, shaped like {"title": string, "tasks": [{"name","dose","hour","minute","food","icon","note"}]}.` }],
+      messages: [{ role: 'user', content: constrained ? content : `${content}\n\nReply with JSON only, shaped like the example.` }],
       temperature: 0,
       max_tokens: 1200,
       stream: true,
@@ -135,8 +139,11 @@ export async function parseRoutine(text: string, opts: { mode?: Mode; onToken?: 
     }
     try {
       const json = constrained ? JSON.parse(raw) : extractJson(raw);
-      const res = RoutineZ.safeParse(json);
-      if (res.success) return { ok: true, spec: res.data, raw, stats, attempts: attempt };
+      const res = ModelRoutineZ.safeParse(json);
+      if (res.success) {
+        const checked = quoteCheck(res.data);
+        return { ok: true, spec: resolveRoutine(checked.routine), modelOnly: resolveRoutine(res.data), fixes: checked.fixes, raw, stats, attempts: attempt };
+      }
       error = res.error.issues.slice(0, 3).map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
     } catch (e) {
       error = `invalid JSON (${(e as Error).message})`;
