@@ -32,7 +32,7 @@ export default defineConfig(({ command }) => ({
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}', '**/*latin-wght*.woff2'],
         // the WebLLM runtime is only fetched by people who load Gemma, so cache it on first use instead
-        globIgnores: ['**/lib-*.js', '**/llm.worker-*.js', '**/llm-*.js'],
+        globIgnores: ['**/lib-*.js', '**/llm.worker-*.js', '**/llm-*.js', 'og.png'],
         runtimeCaching: [
           {
             urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.includes('/assets/'),
