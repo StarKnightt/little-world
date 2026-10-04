@@ -12,13 +12,20 @@ Nothing leaves your device. No account, no server, no analytics. After the first
 |---|---|---|
 | ![Day](docs/day.png) | ![Night](docs/night.png) | ![Mobile](docs/mobile.png) |
 
+| Big view | Family setup |
+|---|---|
+| ![What do I do now?](docs/bigview.png) | ![Send to another device, then open it there](docs/family.gif) |
+
 > **Not medical advice.** Little World only repeats what you told it. It does not know about medicines, doses or interactions, and it is told to send those questions to a doctor or pharmacist. Always follow your doctor's or pharmacist's instructions.
 
 ## What it does
 
 - **Describe:** write your routine the way you'd say it out loud. Gemma 2 2B (in a Web Worker, on your GPU via WebGPU) turns it into a list of tasks with a time, a dose, a food rule and an icon. You see an editable preview first, so you can fix a time or remove a task before anything is planted.
 - **Today:** the island shows the day. The sun (and later the moon) moves along an arc from 6 am on the left to 6 pm on the right. Every task is a flower or lantern on the rim at its hour. It glows when due, droops a little when late, and blooms when you mark it done. The tree in the middle grows with your progress.
-- **Reminders:** a gentle toast and chime in the page, plus a system notification if you allow it.
+- **"What do I do now?":** one button opens a big, calm screen with a single task in very large type, one large "I've done it" button (with undo), and the next few tasks underneath. It can be the default view, so the island is one tap away rather than in the way.
+- **Reminders:** a gentle toast and chime in the page, plus a system notification if you allow it. Optionally read aloud with the browser's own `speechSynthesis` (no voice service), and repeated gently after 20 and 40 minutes if a task is still waiting.
+- **Family setup:** someone else (a grandchild, say) can describe the routine once on a computer that runs Gemma, then press "Send to another device". That shows a QR code and a link. The routine is packed into the link's `#` fragment (deflate + base64url), which browsers never send to a server, so it moves from one device to the other without any backend. Opening the link shows the routine first and asks before replacing anything.
+- **Comfort settings:** read reminders aloud, repeat reminders, open in big view, calmer motion. Calmer motion is on by default when the system asks for reduced motion.
 - **Ask:** "What's next?", "Did I take my BP tablet?", "What did I miss?". Code computes the facts first (done, waiting and how long ago it was due, later), and Gemma only puts them into a friendly sentence. Medical questions get a polite redirect.
 - **Demo mode:** a precomputed routine (real Gemma output for the sample text) so anyone can try it instantly on any device, with a rule-based Ask.
 - **Offline:** a service worker precaches the app (about 0.9 MB). The model (about 1.4 GB) is cached by WebLLM in your browser's Cache Storage after the first download.
@@ -69,12 +76,13 @@ Three decisions mattered most:
 
 - Your routine, your checkmarks and your questions are stored only in `localStorage` on this device (the last 14 days). "Clear everything" wipes them.
 - The model runs on your GPU. No text is sent anywhere. The only network requests are the app files from GitHub Pages and the model weights from Hugging Face (via WebLLM) on first use.
+- A family-setup link carries the routine inside its `#` fragment, so it's never uploaded, but anyone who has the link can read it. Send it only to the person it's for.
 - No cookies, no analytics, no accounts.
 
 ## Requirements
 
 - For the real model: a browser with WebGPU and `shader-f16` (recent Chrome or Edge on desktop; some Android phones), about 1.4 GB of free storage and a few GB of GPU memory.
-- Everything else (demo mode, the island, reminders) works on any modern browser, including phones.
+- Everything else (demo mode, the island, reminders, the big view, opening a family-setup link) works on any modern browser, including phones. Without WebGPU the app says so up front and suggests setting the routine up on a computer and sending it over.
 
 ## Run it locally
 
@@ -85,6 +93,8 @@ npm run build      # outputs dist/ with base /little-world/
 ```
 
 Useful URL parameters: `?demo` (sample routine), `?demo&t=21:30` (preview a time), `?demo&done=3`, `?capture&orbit=0.3` (UI-free camera for recordings).
+
+Checks: `npm run build && npx vite preview`, then `node tools/polish-test.mjs` (big view, share link round trip, no-WebGPU fallback, desktop and mobile, fails on console errors).
 
 Eval: `npm run dev`, then `node eval/run.mjs gemma-2-2b-it-q4f16_1-MLC grammar 20 mytag`.
 
