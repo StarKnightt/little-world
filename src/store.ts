@@ -2,13 +2,29 @@ import type { Routine } from './schema';
 
 const KEY = 'little-world:v1';
 
+export interface Prefs {
+  speak: boolean;
+  repeat: boolean;
+  big: boolean;
+  calm: boolean;
+}
+
 export interface Saved {
   routine: Routine | null;
   done: Record<string, Record<string, number>>;
   notified: Record<string, string[]>;
   welcomed: boolean;
   modelId?: string;
+  prefs: Prefs;
 }
+
+const defaults = (): Saved => ({
+  routine: null,
+  done: {},
+  notified: {},
+  welcomed: false,
+  prefs: { speak: false, repeat: true, big: false, calm: matchMedia('(prefers-reduced-motion: reduce)').matches },
+});
 
 export function dayKey(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -17,9 +33,10 @@ export function dayKey(d: Date) {
 export function load(): Saved {
   try {
     const s = JSON.parse(localStorage.getItem(KEY) ?? '');
-    return { routine: null, done: {}, notified: {}, welcomed: false, ...s };
+    const d = defaults();
+    return { ...d, ...s, prefs: { ...d.prefs, ...s.prefs } };
   } catch {
-    return { routine: null, done: {}, notified: {}, welcomed: false };
+    return defaults();
   }
 }
 

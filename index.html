@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Little World · a tiny island for your daily routine</title>
+    <title>Little World: a tiny island for your daily routine</title>
     <meta name="description" content="Describe your daily medicines or plant care in plain words. Gemma, an open model running in your browser, turns it into a little 3D island that reminds you. Nothing leaves your device." />
     <meta name="theme-color" content="#0e1730" />
     <link rel="icon" href="./icon-192.png" />
@@ -52,12 +52,27 @@
               <p class="muted" id="nextSub"></p>
             </div>
           </div>
+          <button class="primary nowbtn" id="nowBtn" type="button">What do I do now?</button>
           <ol class="tasks" id="tasks"></ol>
           <p class="empty" id="emptyToday">Your island is empty. Open <b>Describe</b> and tell it about your day.</p>
-          <div class="row small">
-            <button class="ghost" id="notifyBtn" type="button">Turn on reminders</button>
-            <button class="ghost" id="resetBtn" type="button">Clear everything</button>
+
+          <div class="family" id="familyBox">
+            <p><b>Setting this up for someone else?</b> Send this routine to their phone or tablet. It opens ready to use, in big text.</p>
+            <button class="ghost wide" id="shareBtn" type="button">Send to another device</button>
           </div>
+
+          <details class="comfort" id="comfort">
+            <summary>Comfort settings</summary>
+            <label class="check"><input type="checkbox" id="optSpeak" /> <span>Read reminders aloud<small>uses this device's own voice</small></span></label>
+            <label class="check"><input type="checkbox" id="optRepeat" /> <span>Remind again until it's done<small>every 20 minutes, up to 3 times</small></span></label>
+            <label class="check"><input type="checkbox" id="optBig" /> <span>Start in big view<small>one thing at a time, large text</small></span></label>
+            <label class="check"><input type="checkbox" id="optCalm" /> <span>Calm motion<small>slower, gentler movement on the island</small></span></label>
+            <div class="row">
+              <button class="ghost" id="notifyBtn" type="button">Allow notifications</button>
+              <button class="ghost" id="testSpeak" type="button">Hear a test reminder</button>
+            </div>
+            <button class="ghost danger" id="resetBtn" type="button">Clear everything on this device</button>
+          </details>
         </section>
 
         <section class="tab" id="tab-describe" hidden>
@@ -121,7 +136,63 @@
             <button class="primary big" id="startDemo" type="button">Try the demo island<small>instant, nothing to download</small></button>
             <button class="ghost big" id="startOwn" type="button">Describe my own routine<small id="ownSub">downloads Gemma once (about 1.4 GB)</small></button>
           </div>
+          <p class="muted small-note">Setting it up for a parent or grandparent? Describe it here once, then send it to their device from the Today tab.</p>
           <p class="disclaimer">Not medical advice. Always follow your doctor's or pharmacist's instructions.</p>
+        </div>
+      </div>
+
+      <div class="now" id="now" hidden role="dialog" aria-modal="true" aria-labelledby="nowTitle">
+        <div class="now-top">
+          <button class="ghost back" id="nowClose" type="button">Back to the island</button>
+          <div class="now-clock"><b id="nowClock"></b><span id="nowDate"></span></div>
+        </div>
+        <div class="now-main">
+          <p class="now-kicker" id="nowKicker"></p>
+          <div class="now-task">
+            <img id="nowIcon" alt="" width="112" height="112" />
+            <div>
+              <h2 id="nowTitle"></h2>
+              <p id="nowDetail"></p>
+            </div>
+          </div>
+          <div class="now-actions">
+            <button class="primary huge" id="nowDone" type="button">I've done it</button>
+            <button class="ghost huge" id="nowSpeak" type="button">Read it aloud</button>
+          </div>
+          <button class="ghost" id="nowUndo" type="button" hidden>Undo, I haven't done it</button>
+        </div>
+        <div class="now-later">
+          <p id="nowProgress"></p>
+          <ol id="nowLater"></ol>
+        </div>
+      </div>
+
+      <div class="modal" id="shareDlg" hidden role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+        <div class="card">
+          <h2 id="shareTitle">Send to another device</h2>
+          <p>Scan this with the other phone's camera, or send the link. It opens Little World with this routine ready to use.</p>
+          <div class="qr" id="qr" role="img" aria-label="QR code for the routine link"></div>
+          <label class="check"><input type="checkbox" id="shareBig" checked /> <span>Open in big view</span></label>
+          <label class="check"><input type="checkbox" id="shareSpeak" /> <span>Read reminders aloud</span></label>
+          <div class="row">
+            <button class="primary" id="shareCopy" type="button">Copy link</button>
+            <button class="ghost" id="shareNative" type="button" hidden>Share</button>
+          </div>
+          <p class="tiny muted">The routine is written inside the link itself, after the # sign, and is never uploaded. Anyone with the link can read it, so send it only to the person it's for.</p>
+          <button class="ghost wide" id="shareClose" type="button">Close</button>
+        </div>
+      </div>
+
+      <div class="modal" id="incoming" hidden role="dialog" aria-modal="true" aria-labelledby="incomingHead">
+        <div class="card">
+          <h2 id="incomingHead">Someone set up your day</h2>
+          <p id="incomingTitle"></p>
+          <ol class="incoming-list" id="incomingList"></ol>
+          <p class="muted" id="incomingWarn"></p>
+          <div class="choices">
+            <button class="primary big" id="incomingUse" type="button">Use this routine</button>
+            <button class="ghost big" id="incomingNo" type="button">Not now</button>
+          </div>
         </div>
       </div>
     </div>

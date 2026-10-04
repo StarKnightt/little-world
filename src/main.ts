@@ -6,6 +6,7 @@ import { dayKey, load, save, wipe } from './store';
 import { simpleAnswer } from './simple-qa';
 import { glyphDataUrl } from './glyphs';
 import type { GpuStatus, ParseResult } from './llm';
+import { decodeShare, encodeShare, readShareHash, shareUrl } from './share';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const params = new URLSearchParams(location.search);
@@ -71,7 +72,14 @@ function toggleDone(id: string) {
 }
 
 function describe(t: Task) {
-  return [t.dose, FOOD_LABEL[t.food], t.note].filter(Boolean).join(' · ');
+  return [t.dose, FOOD_LABEL[t.food], t.note].filter(Boolean).join(', ');
+}
+
+function inWords(mins: number) {
+  const h = Math.floor(mins / 60), m = mins % 60;
+  const hs = h ? `${h} hour${h === 1 ? '' : 's'}` : '';
+  const ms = m ? `${m} minute${m === 1 ? '' : 's'}` : '';
+  return [hs, ms].filter(Boolean).join(' and ') || 'a moment';
 }
 
 function renderTasks() {
@@ -79,6 +87,7 @@ function renderTasks() {
   const list = $('tasks');
   const mins = minsOf(now());
   $('emptyToday').hidden = !!r;
+  $('familyBox').hidden = $('nowBtn').hidden = !r;
   list.innerHTML = '';
   if (!r) {
     $('nextUp').textContent = 'Nothing planned yet.';
@@ -94,7 +103,8 @@ function renderTasks() {
     const li = document.createElement('li');
     li.className = s;
     li.dataset.id = t.id;
-    li.innerHTML = `<img alt="" src="${glyphDataUrl(t.icon)}" /><div><div class="t">${fmtTime(t.hour, t.minute)}${s === 'due' ? ' · now' : s === 'late' ? ' · still waiting' : ''}</div><div class="n">${escapeHtml(t.name)}</div><div class="d">${escapeHtml(describe(t))}</div></div><button class="done-btn" type="button">${s === 'done' ? 'Undo' : 'Done'}</button>`;
+    const badge = s === 'due' ? '<span class="badge now">Now</span>' : s === 'late' ? '<span class="badge late">Waiting</span>' : s === 'done' ? '<span class="badge ok">Done</span>' : '';
+    li.innerHTML = `<img alt="" src="${glyphDataUrl(t.icon)}" /><div><div class="t">${fmtTime(t.hour, t.minute)}${badge}</div><div class="n">${escapeHtml(t.name)}</div><div class="d">${escapeHtml(describe(t))}</div></div><button class="done-btn" type="button" aria-label="${s === 'done' ? 'Undo' : 'Mark done'}: ${escapeHtml(t.name)}">${s === 'done' ? 'Undo' : 'Done'}</button>`;
     li.querySelector('button')!.addEventListener('click', () => toggleDone(t.id));
     li.addEventListener('mouseenter', () => world.focusTask(t.id));
     li.addEventListener('mouseleave', () => world.focusTask(null));
@@ -110,13 +120,121 @@ function renderTasks() {
     $('nextUp').textContent = 'All done for today. Your island is in full bloom.';
     $('nextSub').textContent = '';
   } else if (due.length) {
-    $('nextUp').textContent = `Now: ${due[0].name}${due[0].dose ? `, ${due[0].dose}` : ''}`;
-    $('nextSub').textContent = [describe(due[0]), due.length > 1 ? `and ${due.length - 1} more waiting` : ''].filter(Boolean).join(' · ');
+    $('nextUp').textContent = `Now: ${due[0].name}`;
+    $('nextSub').textContent = [describe(due[0]), due.length > 1 ? `and ${due.length - 1} more waiting` : ''].filter(Boolean).join('. ');
   } else if (next) {
     const inMin = at(next) - mins;
     $('nextUp').textContent = `Next: ${next.name} at ${fmtTime(next.hour, next.minute)}`;
-    $('nextSub').textContent = `in ${inMin >= 60 ? `${Math.floor(inMin / 60)} h ${inMin % 60} min` : `${inMin} min`}${describe(next) ? ' · ' + describe(next) : ''}`;
+    $('nextSub').textContent = `in ${inWords(inMin)}${describe(next) ? '. ' + describe(next) : ''}`;
   }
+  renderNow();
+}
+
+// ---------- big view: one thing at a time ----------
+let undoId: string | null = null;
+let undoTimer = 0;
+
+function focusTask(): { t: Task; s: TaskState } | null {
+  const r = state.routine;
+  if (!r) return null;
+  const mins = minsOf(now());
+  const list = r.tasks.map((t) => ({ t, s: taskState(t, mins) }));
+  return list.find((x) => x.s === 'due' || x.s === 'late') ?? list.find((x) => x.s === 'upcoming') ?? null;
+}
+
+function sayTask(t: Task, s: TaskState) {
+  const what = `${t.name}${t.dose ? `, ${t.dose}` : ''}${FOOD_LABEL[t.food] ? `, ${FOOD_LABEL[t.food]}` : ''}${t.note ? `. ${t.note}` : ''}.`;
+  if (s === 'upcoming') return `Next, at ${fmtTime(t.hour, t.minute)}: ${what}`;
+  return `It's time for ${what}`;
+}
+
+function renderNow() {
+  if ($('now').hidden) return;
+  const d = now();
+  const mins = minsOf(d);
+  $('nowClock').textContent = fmtTime(d.getHours(), d.getMinutes());
+  $('nowDate').textContent = previewMin !== null ? 'previewing' : d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+  const r = state.routine;
+  const f = focusTask();
+  const doneCount = r ? r.tasks.filter((t) => todayDone()[t.id]).length : 0;
+  $('nowUndo').hidden = !undoId;
+  if (!r) {
+    $('nowKicker').textContent = 'Nothing planned yet';
+    $('nowTitle').textContent = 'Your island is empty';
+    $('nowDetail').textContent = 'Go back to the island and describe the day, or open a link someone sent you.';
+    $('nowIcon').hidden = true;
+    $('nowDone').hidden = $('nowSpeak').hidden = true;
+  } else if (!f) {
+    $('nowKicker').textContent = 'All done for today';
+    $('nowTitle').textContent = 'Nothing else to do';
+    $('nowDetail').textContent = 'Everything on your list is done. Your island is in full bloom.';
+    $('nowIcon').hidden = true;
+    $('nowDone').hidden = true;
+    $('nowSpeak').hidden = false;
+  } else {
+    const { t, s } = f;
+    $('nowKicker').textContent =
+      s === 'due' ? 'Right now' : s === 'late' ? `Still waiting, since ${fmtTime(t.hour, t.minute)}` : `Next, at ${fmtTime(t.hour, t.minute)}, in ${inWords(at(t) - mins)}`;
+    $('nowKicker').className = `now-kicker ${s}`;
+    $('nowTitle').textContent = t.name;
+    $('nowDetail').textContent = describe(t) || 'Nothing else to remember for this one.';
+    $<HTMLImageElement>('nowIcon').src = glyphDataUrl(t.icon);
+    $('nowIcon').hidden = false;
+    $('nowDone').hidden = $('nowSpeak').hidden = false;
+    $('nowDone').textContent = s === 'upcoming' ? "I've already done it" : "I've done it";
+    $('nowDone').dataset.id = t.id;
+  }
+  $('nowProgress').textContent = r ? `${doneCount} of ${r.tasks.length} done today` : '';
+  const later = r ? r.tasks.filter((t) => !todayDone()[t.id] && t.id !== f?.t.id && at(t) > mins).slice(0, 3) : [];
+  $('nowLater').innerHTML = later.map((t) => `<li><b>${fmtTime(t.hour, t.minute)}</b> ${escapeHtml(t.name)}</li>`).join('');
+  $('nowLater').hidden = !later.length;
+}
+
+function openNow() {
+  $('now').hidden = false;
+  document.body.classList.add('bigview');
+  renderNow();
+  ($('nowDone').hidden ? $('nowClose') : $('nowDone')).focus();
+}
+function closeNow() {
+  $('now').hidden = true;
+  document.body.classList.remove('bigview');
+  $('nowBtn').focus();
+}
+$('nowBtn').addEventListener('click', openNow);
+$('nowClose').addEventListener('click', closeNow);
+$('nowDone').addEventListener('click', () => {
+  const id = $('nowDone').dataset.id;
+  if (!id || todayDone()[id]) return;
+  toggleDone(id);
+  undoId = id;
+  clearTimeout(undoTimer);
+  undoTimer = window.setTimeout(() => ((undoId = null), renderNow()), 15000);
+  toast('Done. Well done.', 3000);
+  renderNow();
+});
+$('nowUndo').addEventListener('click', () => {
+  if (undoId && todayDone()[undoId]) toggleDone(undoId);
+  undoId = null;
+  renderNow();
+});
+$('nowSpeak').addEventListener('click', () => {
+  const f = focusTask();
+  speak(f ? sayTask(f.t, f.s) : 'Everything on your list is done for today.');
+});
+
+// ---------- speech ----------
+function speak(text: string) {
+  if (!('speechSynthesis' in window)) {
+    toast("This browser can't read aloud. The reminder is on the screen instead.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.88;
+  u.pitch = 1;
+  u.lang = document.documentElement.lang || 'en';
+  speechSynthesis.speak(u);
 }
 
 // ---------- reminders ----------
@@ -160,12 +278,20 @@ function checkReminders() {
   const sent = (state.notified[key] ??= []);
   const mins = minsOf(d);
   for (const t of r.tasks) {
-    if (todayDone()[t.id] || sent.includes(t.id) || mins < at(t) || mins > at(t) + 60) continue;
-    sent.push(t.id);
+    if (todayDone()[t.id] || mins < at(t) || mins > at(t) + 60) continue;
+    // first reminder when it's due, then gently again after 20 and 40 minutes if still not done
+    const round = state.prefs.repeat ? Math.min(2, Math.floor((mins - at(t)) / 20)) : 0;
+    const tag = round ? `${t.id}#${round}` : t.id;
+    if (sent.includes(tag)) continue;
+    sent.push(tag);
     save(state);
-    const msg = `It's ${fmtTime(t.hour, t.minute)}. Time for ${t.name}${t.dose ? `, ${t.dose}` : ''}${FOOD_LABEL[t.food] ? ` (${FOOD_LABEL[t.food]})` : ''}.`;
+    const msg = round
+      ? `A gentle reminder: ${t.name}${t.dose ? `, ${t.dose}` : ''} is still waiting, since ${fmtTime(t.hour, t.minute)}.`
+      : `It's ${fmtTime(t.hour, t.minute)}. Time for ${t.name}${t.dose ? `, ${t.dose}` : ''}${FOOD_LABEL[t.food] ? ` (${FOOD_LABEL[t.food]})` : ''}.`;
     toast(msg, 9000);
     chime();
+    if (state.prefs.speak) speak(msg);
+    if (state.prefs.big && $('now').hidden && $('welcome').hidden) openNow();
     if ('Notification' in window && Notification.permission === 'granted') {
       navigator.serviceWorker?.ready
         .then((reg) => reg.showNotification('Little World', { body: msg, tag: t.id, icon: './icon-192.png' }))
@@ -211,7 +337,14 @@ world.onTap = (id) => toggleDone(id);
 function setChip() {
   const chip = $('modelChip');
   chip.classList.toggle('live', modelReady);
-  chip.textContent = modelReady ? `${MODEL_LABEL} · running on this device` : state.routine?.source === 'gemma' ? `${MODEL_LABEL} · saved, loads on demand` : 'Demo mode · no download';
+  const src = state.routine?.source;
+  chip.textContent = modelReady
+    ? `${MODEL_LABEL} is running on this device`
+    : src === 'gemma'
+      ? `Built by ${MODEL_LABEL} on this device`
+      : src === 'shared'
+        ? 'Routine sent from another device'
+        : 'Demo island, nothing downloaded';
 }
 $('modelChip').addEventListener('click', () => showTab('describe'));
 
@@ -221,13 +354,11 @@ async function ensureGpuLine() {
   gpu = await llm.checkWebGPU();
   const cached = gpu.ok ? await llm.hasCached(MODEL_ID) : false;
   const line = $('gpuLine');
-  if (!gpu.ok) {
-    line.textContent = `${gpu.reason} Gemma needs WebGPU (Chrome or Edge on desktop or Android). The demo island still works.`;
+  if (!gpu.ok || !gpu.f16) {
+    line.textContent = `${gpu.ok ? 'This GPU is missing 16-bit float support, which this Gemma build needs.' : gpu.reason} Gemma can't run on this device, but everything else can. Set the routine up on a computer with Chrome, then use "Send to another device" to open it here. The demo island works too.`;
+    line.classList.add('warn');
     $<HTMLButtonElement>('buildBtn').disabled = true;
-    $('ownSub').textContent = 'needs a WebGPU browser like Chrome or Edge';
-  } else if (!gpu.f16) {
-    line.textContent = 'Your GPU is missing 16-bit float support, which this Gemma build needs. The demo island still works.';
-    $<HTMLButtonElement>('buildBtn').disabled = true;
+    $('buildBtn').textContent = 'Gemma needs a computer with Chrome';
   } else {
     line.textContent = cached
       ? `${MODEL_LABEL} is already saved on this device. It loads in seconds and works offline.`
@@ -289,7 +420,7 @@ $('buildBtn').addEventListener('click', async () => {
     }
     pending = { spec: res.spec, result: res, input: text };
     const s = res.stats;
-    $('loadText').textContent = `${s.completionTokens} tokens in ${(s.ms / 1000).toFixed(1)} s · ${s.decodeTps.toFixed(0)} tokens/s · checked by zod${res.attempts > 1 ? ' after one repair' : ''}`;
+    $('loadText').textContent = `${s.completionTokens} tokens in ${(s.ms / 1000).toFixed(1)} s (${s.decodeTps.toFixed(0)} tokens/s), checked by zod${res.attempts > 1 ? ' after one repair' : ''}`;
     $('previewHead').textContent = `Gemma found ${res.spec.tasks.length} thing${res.spec.tasks.length === 1 ? '' : 's'} to remember. Check the times, then plant them.`;
     res.spec.tasks.sort((a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute));
     renderPreview();
@@ -372,7 +503,7 @@ async function askQuestion(q: string) {
       a.textContent = s;
       a.scrollIntoView({ block: 'nearest' });
     });
-    a.innerHTML = `${escapeHtml(text)}<small>${MODEL_LABEL} on this device · ${stats.decodeTps.toFixed(0)} tokens/s · only your routine was used</small>`;
+    a.innerHTML = `${escapeHtml(text)}<small>${MODEL_LABEL} on this device, ${stats.decodeTps.toFixed(0)} tokens/s, using only your routine</small>`;
   } catch (e) {
     a.textContent = `Gemma hit a problem: ${(e as Error).message}`;
   }
@@ -396,6 +527,98 @@ $('resetBtn').addEventListener('click', () => {
   if (!confirm('Clear your routine and history from this device?')) return;
   wipe();
   location.reload();
+});
+
+// ---------- comfort settings ----------
+const PREF_INPUTS = { optSpeak: 'speak', optRepeat: 'repeat', optBig: 'big', optCalm: 'calm' } as const;
+function applyPrefs() {
+  for (const [id, k] of Object.entries(PREF_INPUTS)) $<HTMLInputElement>(id).checked = state.prefs[k];
+  world.calm = state.prefs.calm;
+  document.body.classList.toggle('calm', state.prefs.calm);
+}
+for (const [id, k] of Object.entries(PREF_INPUTS)) {
+  $<HTMLInputElement>(id).addEventListener('change', (e) => {
+    state.prefs[k] = (e.target as HTMLInputElement).checked;
+    save(state);
+    applyPrefs();
+    if (k === 'speak' && state.prefs.speak) speak('Reminders will be read aloud.');
+  });
+}
+$('testSpeak').addEventListener('click', () => {
+  const f = focusTask();
+  speak(f ? sayTask(f.t, f.s) : 'This is how a reminder will sound.');
+});
+
+// ---------- family setup: send the routine to another device ----------
+let shareLink = '';
+async function renderShare() {
+  if (!state.routine) return;
+  const code = await encodeShare(state.routine, { big: $<HTMLInputElement>('shareBig').checked, speak: $<HTMLInputElement>('shareSpeak').checked });
+  shareLink = shareUrl(code);
+  const { renderSVG } = await import('uqr');
+  $('qr').innerHTML = renderSVG(shareLink, { border: 2, whiteColor: '#fffaf0', blackColor: '#141a33' });
+}
+$('shareBtn').addEventListener('click', async () => {
+  if (!state.routine) return toast('Describe a routine first, then you can send it.');
+  $('shareDlg').hidden = false;
+  $('shareNative').hidden = !navigator.share;
+  await renderShare();
+  $('shareCopy').focus();
+});
+['shareBig', 'shareSpeak'].forEach((id) => $(id).addEventListener('change', renderShare));
+$('shareCopy').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(shareLink);
+    toast('Link copied. Open it on the other device.');
+  } catch {
+    prompt('Copy this link:', shareLink);
+  }
+});
+$('shareNative').addEventListener('click', () => navigator.share?.({ title: 'Little World', text: 'Your day, set up for you', url: shareLink }).catch(() => {}));
+$('shareClose').addEventListener('click', () => ($('shareDlg').hidden = true));
+
+async function receiveShare(code: string) {
+  history.replaceState(null, '', location.pathname + location.search);
+  let got: Awaited<ReturnType<typeof decodeShare>>;
+  try {
+    got = await decodeShare(code);
+  } catch {
+    toast("That link didn't contain a routine Little World could read. Ask for it to be sent again.", 8000);
+    return;
+  }
+  $('welcome').hidden = true;
+  $('incomingTitle').textContent = got.spec.title;
+  $('incomingList').innerHTML = [...got.spec.tasks]
+    .sort((a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute))
+    .map((t) => `<li><b>${fmtTime(t.hour, t.minute)}</b> ${escapeHtml(t.name)}${t.dose ? `, ${escapeHtml(t.dose)}` : ''}</li>`)
+    .join('');
+  $('incomingWarn').textContent = state.routine ? 'This will replace the routine already on this device.' : '';
+  $('incoming').hidden = false;
+  $('incomingUse').focus();
+  $('incomingUse').onclick = () => {
+    state.welcomed = true;
+    state.prefs.big = got.prefs.big;
+    state.prefs.speak = got.prefs.speak;
+    setRoutine(toRoutine(got.spec, { source: 'shared', createdAt: Date.now(), input: '' }));
+    delete state.done[dayKey(new Date())];
+    save(state);
+    applyPrefs();
+    setChip();
+    renderTasks();
+    $('incoming').hidden = true;
+    if (state.prefs.big) openNow();
+    toast(state.prefs.speak ? 'All set. Reminders will be read aloud.' : 'All set. Your day is on the island.');
+  };
+  $('incomingNo').onclick = () => {
+    $('incoming').hidden = true;
+    $('welcome').hidden = state.welcomed;
+  };
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!$('shareDlg').hidden) $('shareDlg').hidden = true;
+  else if (!$('now').hidden) closeNow();
 });
 
 // ---------- welcome ----------
@@ -428,11 +651,23 @@ if (params.has('done')) {
 world.setRoutine(state.routine);
 if (state.routine) $('routineTitle').textContent = state.routine.title;
 $('welcome').hidden = state.welcomed;
-$<HTMLTextAreaElement>('desc').value = state.routine?.input ?? MEDICINE_SAMPLE;
+$<HTMLTextAreaElement>('desc').value = state.routine?.input || MEDICINE_SAMPLE;
 if ('Notification' in window && Notification.permission === 'granted') $('notifyBtn').hidden = true;
+if (!('gpu' in navigator)) {
+  // cheap check before any model code loads, so the choice is honest from the first screen
+  $('ownSub').textContent = "this browser can't run Gemma, but you can set it up on a computer and send it here";
+}
+applyPrefs();
 tick();
 renderTasks();
 setChip();
+const incomingCode = readShareHash();
+if (incomingCode) receiveShare(incomingCode);
+else if (state.prefs.big && state.routine && state.welcomed && !params.has('capture') && !params.has('demo')) openNow();
+window.addEventListener('hashchange', () => {
+  const c = readShareHash();
+  if (c) receiveShare(c);
+});
 setInterval(() => {
   tick();
   checkReminders();
@@ -467,4 +702,4 @@ function autoplay(from: number, to: number, ms: number, doneAt: [number, number]
   });
 }
 
-(window as any).__lw = { world, state, setPreview: (m: number | null) => ((previewMin = m), tick(), renderTasks()), toggleDone, askQuestion, ensureModel, showTab, autoplay };
+(window as any).__lw = { world, state, setPreview: (m: number | null) => ((previewMin = m), tick(), renderTasks()), toggleDone, askQuestion, ensureModel, showTab, autoplay, openNow, closeNow, shareLink: () => shareLink };

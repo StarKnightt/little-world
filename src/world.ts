@@ -113,6 +113,9 @@ export class World {
   minutes = 12 * 60;
   onTap: (id: string) => void = () => {};
   intro = 0;
+  /** Slower ambient motion and fewer sparks, for reduced-motion users and calm mode. */
+  calm = false;
+  private calmT = 0;
 
   constructor(private host: HTMLElement) {
     const mobile = matchMedia('(max-width: 720px)').matches;
@@ -640,7 +643,7 @@ export class World {
     const pos = this.sparks.geometry.attributes.position as THREE.BufferAttribute;
     const cols = this.sparks.geometry.attributes.color as THREE.BufferAttribute;
     let n = 0;
-    for (let i = 0; i < this.sparkData.length && n < 40; i++) {
+    for (let i = 0; i < this.sparkData.length && n < (this.calm ? 10 : 40); i++) {
       const d = this.sparkData[i];
       if (d.life > 0) continue;
       d.life = 1 + Math.random() * 0.6;
@@ -687,7 +690,7 @@ export class World {
     this.camera.fov = portrait ? 56 : 36;
     // keep the island centred in the space the UI panel leaves free
     const panel = document.body.classList.contains('capture') ? 0 : 1;
-    if (w > 720) this.camera.setViewOffset(w, h, (panel * 400) / 2, 0, w, h);
+    if (w > 720) this.camera.setViewOffset(w, h, (panel * 436) / 2, 0, w, h);
     else this.camera.setViewOffset(w, h, 0, panel * h * 0.2, w, h);
     this.camera.updateProjectionMatrix();
   }
@@ -695,9 +698,11 @@ export class World {
   // ---------- frame ----------
   private frame() {
     this.timer.update();
-    const dt = Math.min(this.timer.getDelta(), 0.05);
-    const t = this.timer.getElapsed();
-    this.intro = Math.min(1, this.intro + dt * 0.55);
+    const realDt = Math.min(this.timer.getDelta(), 0.05);
+    this.calmT += realDt * (this.calm ? 0.3 : 1);
+    const dt = this.calm ? realDt * 0.3 : realDt;
+    const t = this.calmT;
+    this.intro = Math.min(1, this.intro + realDt * 0.55);
     const m = this.minutes;
 
     // sun, moon, sky

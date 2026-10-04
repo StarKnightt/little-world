@@ -77,7 +77,7 @@ export interface Task extends TaskSpec {
 export interface Routine {
   title: string;
   tasks: Task[];
-  source: 'demo' | 'gemma';
+  source: 'demo' | 'gemma' | 'shared';
   model?: string;
   createdAt: number;
   input: string;

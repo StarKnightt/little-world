@@ -53,6 +53,27 @@ if (scene === 'day' || scene === 'hero') {
   await page.evaluate(([d, ms]) => window.__lw.autoplay(6 * 60, 22 * 60 + 30, ms, d), [DONE, scene === 'hero' ? 9000 : 14000]);
   await wait(scene === 'hero' ? 1800 : 2600);
   await stop();
+} else if (scene === 'care') {
+  // family setup: send the demo routine as a link, open it as the receiver, then use the big view
+  await page.goto(`${base}/?demo=reset&t=08:05`);
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(`${base}/?demo=reset&t=08:05`);
+  await wait(2500);
+  await start();
+  await wait(900);
+  await page.click('#shareBtn');
+  await page.waitForSelector('#qr svg');
+  await wait(2600);
+  const hash = new URL(await page.evaluate(() => window.__lw.shareLink())).hash;
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(`${base}/?t=08:05${hash}`);
+  await page.waitForSelector('#incoming:not([hidden])');
+  await wait(2600);
+  await page.click('#incomingUse');
+  await wait(2600);
+  await page.click('#nowDone');
+  await wait(2400);
+  await stop();
 } else if (scene === 'gemma') {
   await page.goto(`${base}/?demo=reset&t=10:05`);
   await page.evaluate(() => localStorage.clear());
