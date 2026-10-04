@@ -234,6 +234,16 @@ async function ensureGpuLine() {
   }
 }
 
+/** The WebLLM chunks are not precached, so store the ones this page used for offline visits. */
+function warmOfflineCache() {
+  if (!('caches' in window) || !import.meta.env.PROD) return;
+  const urls = performance
+    .getEntriesByType('resource')
+    .map((e) => e.name)
+    .filter((u) => u.startsWith(location.origin) && u.includes('/assets/') && u.endsWith('.js'));
+  caches.open('little-world-runtime').then((c) => Promise.all(urls.map((u) => c.match(u).then((hit) => (hit ? undefined : c.add(u)))))).catch(() => {});
+}
+
 async function ensureModel() {
   if (modelReady) return true;
   llm ??= await import('./llm');
@@ -249,6 +259,7 @@ async function ensureModel() {
   modelReady = true;
   state.modelId = MODEL_ID;
   save(state);
+  warmOfflineCache();
   $('loadText').textContent = `Gemma ready in ${((performance.now() - t0) / 1000).toFixed(1)} s, running on your GPU.`;
   $('gpuLine').textContent = `${MODEL_LABEL} is loaded on this device.`;
   setChip();

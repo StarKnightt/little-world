@@ -48,7 +48,7 @@ if (scene === 'day') {
   await wait(2600);
   await start();
   await wait(1200);
-  const doneAt = [[7 * 60 + 12, 0], [8 * 60 + 45, 1], [12 * 60 + 45, 2], [16 * 60 + 10, 3], [18 * 60 + 20, 4], [19 * 60 + 40, 5], [20 * 60 + 45, 6]];
+  const doneAt = [[7 * 60 + 12, 0], [8 * 60 + 45, 1], [12 * 60 + 45, 2], [16 * 60 + 15, 3], [19 * 60 + 45, 4], [20 * 60 + 50, 5]];
   const marked = new Set();
   await scrub(6 * 60 + 20, 22 * 60 + 10, 12500, async (m) => {
     for (const [at, idx] of doneAt) {

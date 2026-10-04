@@ -1,10 +1,10 @@
 import type { Food, ModelRoutine, When } from './schema';
 
 const FOOD_PHRASES: [RegExp, Food][] = [
-  [/(empty stomach|khali pet)/i, 'empty_stomach'],
-  [/with (food|meals?|milk)/i, 'with_food'],
-  [/(after (food|meals?)|khane ke baad)/i, 'after_food'],
-  [/before (food|meals?)/i, 'before_food'],
+  [/\b(empty stomach|khali pet)\b/i, 'empty_stomach'],
+  [/\bwith (food|meals?|milk)\b/i, 'with_food'],
+  [/\b(after (food|meals?)|khane ke baad)\b/i, 'after_food'],
+  [/\bbefore (food|meals?)\b/i, 'before_food'],
 ];
 
 type Fix = { when: When; hour?: number; minute?: number };
@@ -37,6 +37,21 @@ function clockTimes(s: string): { hour: number; minute: number }[] {
   return out;
 }
 
+/** Every distinct moment named in a quote, in the order written. */
+function moments(said: string): Fix[] {
+  const found: { at: number; fix: Fix }[] = [];
+  for (const [re, w] of PHRASES) {
+    const m = said.match(re);
+    if (m) found.push({ at: m.index ?? 0, fix: { when: w } });
+  }
+  for (const m of said.matchAll(/\b(\d{1,2})(?:[:.](\d{2}))?\s*(a\.?m\.?|p\.?m\.?)(?![a-z])/gi)) {
+    let h = Number(m[1]) % 12;
+    if (/p/i.test(m[3])) h += 12;
+    found.push({ at: m.index ?? 0, fix: { when: 'at_time', hour: h, minute: Number(m[2] ?? 0) } });
+  }
+  return found.sort((a, b) => a.at - b.at).map((f) => f.fix);
+}
+
 function fromQuote(said: string): Fix | null {
   const times = clockTimes(said);
   const phrases = PHRASES.filter(([re]) => re.test(said)).map(([, w]) => w);
@@ -51,8 +66,18 @@ function fromQuote(said: string): Fix | null {
  */
 export function quoteCheck(m: ModelRoutine): { routine: ModelRoutine; fixes: number } {
   let fixes = 0;
-  const tasks = m.tasks.map((t0) => {
-    let t = t0;
+  // "before lunch and before dinner" quoted on a single task means two tasks
+  const split: ModelRoutine['tasks'] = [];
+  for (const t of m.tasks) {
+    const ms = moments(t.said);
+    const siblings = m.tasks.filter((o) => o.said === t.said).length;
+    if (ms.length >= 2 && siblings === 1) {
+      fixes += ms.length - 1;
+      for (const f of ms) split.push({ ...t, ...f, ...(f.when === 'at_time' ? {} : { hour: undefined, minute: undefined }), said: '' });
+    } else split.push(t);
+  }
+  const tasks = split.map((t0) => {
+    let t = /^(unknown|none|n\/?a|-)$/i.test(t0.dose.trim()) ? { ...t0, dose: '' } : t0;
     const foods = FOOD_PHRASES.filter(([re]) => re.test(t.said)).map(([, f]) => f);
     if (foods.length === 1 && foods[0] !== t.food) {
       fixes++;

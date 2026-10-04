@@ -49,3 +49,8 @@ const log = (s: string) => {
   return { modelId, mode, gpu, loadMs, rows };
 };
 log('ready');
+
+(window as any).parseOne = async (modelId: string, text: string) => {
+  await loadModel(modelId, () => {});
+  return parseRoutine(text);
+};
