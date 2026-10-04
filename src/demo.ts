@@ -15,8 +15,8 @@ Check the seedlings before bed.`;
 
 /**
  * The unedited output of Gemma 2 2B plus the quote check for MEDICINE_SAMPLE (see eval/), saved so the
- * demo works without WebGPU or a download. Gemma missed the walk; that is left in on purpose. Only the title is
- * written by hand (Gemma's was "Morning meds, blood pressure, and walk").
+ * demo works without WebGPU or a download. Gemma missed the walk; that is left in on purpose. Only the title
+ * was written by hand.
  */
 export const DEMO_SPEC: RoutineSpec = {
   title: 'Daily medicines',
