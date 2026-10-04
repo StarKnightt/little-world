@@ -98,6 +98,7 @@ export class World {
   private blossoms: THREE.Mesh[] = [];
   private windowMat!: THREE.MeshStandardMaterial;
   private clouds: THREE.Group[] = [];
+  private cloudMat!: THREE.MeshStandardMaterial;
   private flies!: THREE.Points;
   private sparks!: THREE.Points;
   private sparkData: { v: THREE.Vector3; life: number }[] = [];
@@ -429,7 +430,7 @@ export class World {
   }
 
   private buildClouds() {
-    const mat = new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#dfe9ff', emissiveIntensity: 0.35, flatShading: true, roughness: 1, transparent: true, opacity: 0.9 });
+    const mat = (this.cloudMat = new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#dfe9ff', emissiveIntensity: 0.35, flatShading: true, roughness: 1, transparent: true, opacity: 0.9 }));
     for (let i = 0; i < 7; i++) {
       const c = new THREE.Group();
       const n = 3 + Math.floor(Math.random() * 3);
@@ -598,6 +599,8 @@ export class World {
     hit.userData.id = task.id;
     group.add(hit);
 
+    const wrap = document.createElement('div');
+    wrap.className = 'lab';
     const el = document.createElement('button');
     el.className = 'tag';
     el.type = 'button';
@@ -606,7 +609,8 @@ export class World {
       e.stopPropagation();
       this.onTap(task.id);
     });
-    const label = new CSS2DObject(el);
+    wrap.appendChild(el);
+    const label = new CSS2DObject(wrap);
     label.position.y = stemH + 1.15;
     group.add(label);
 
@@ -622,7 +626,7 @@ export class World {
       const s = states[id] ?? 'upcoming';
       f.state = s;
       if (s === 'done') done++;
-      f.label.element.className = `tag ${s}`;
+      (f.label.element.firstElementChild as HTMLElement).className = `tag ${s}`;
     }
     this.progress = this.flowers.size ? done / this.flowers.size : 0;
   }
@@ -649,7 +653,7 @@ export class World {
   }
 
   focusTask(id: string | null) {
-    for (const [fid, f] of this.flowers) f.label.element.classList.toggle('focus', fid === id);
+    for (const [fid, f] of this.flowers) f.label.element.firstElementChild!.classList.toggle('focus', fid === id);
   }
 
   // ---------- input ----------
@@ -731,6 +735,8 @@ export class World {
     (this.flies.material as THREE.ShaderMaterial).uniforms.t.value = t;
     (this.flies.material as THREE.ShaderMaterial).uniforms.amt.value = (1 - day) * 0.9 + 0.25 * this.progress;
     this.bloom.strength = 0.45 + 0.45 * (1 - day);
+    this.cloudMat.emissiveIntensity = 0.04 + 0.31 * day;
+    this.cloudMat.color.set('#5d6894').lerp(new THREE.Color('#ffffff'), day).lerp(new THREE.Color('#ffc2a0'), twilight * 0.5);
 
     this.nowMarker.position.copy(rimPos(m, ISLAND_R - 0.7, 0.09));
     this.nowMarker.scale.setScalar(1 + Math.sin(t * 3) * 0.15);
@@ -798,6 +804,35 @@ export class World {
     this.controls.update();
     this.composer.render();
     this.labels.render(this.scene, this.camera);
+    this.declutter();
+  }
+
+  /** Lift labels that would overlap on screen, nearest first. */
+  private declutter() {
+    const w = this.host.clientWidth, h = this.host.clientHeight;
+    const v = new THREE.Vector3();
+    const items = [...this.flowers.values()].map((f) => {
+      const el = f.label.element.firstElementChild as HTMLElement;
+      v.setFromMatrixPosition(f.label.matrixWorld).project(this.camera);
+      return { el, x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h, z: v.z, bw: el.offsetWidth + 6, bh: el.offsetHeight + 4 };
+    });
+    items.sort((a, b) => a.z - b.z);
+    const placed: { x: number; y: number; bw: number; bh: number }[] = [];
+    for (const it of items) {
+      let y = it.y;
+      for (let k = 0; k < 6; k++) {
+        const hit = placed.find((p) => Math.abs(p.x - it.x) < (p.bw + it.bw) / 2 && Math.abs(p.y - y) < (p.bh + it.bh) / 2);
+        if (!hit) break;
+        y = hit.y - (hit.bh + it.bh) / 2;
+      }
+      placed.push({ x: it.x, y, bw: it.bw, bh: it.bh });
+      const dy = Math.round(y - it.y);
+      const cur = it.el.dataset.dy ?? '0';
+      if (String(dy) !== cur) {
+        it.el.dataset.dy = String(dy);
+        it.el.style.translate = `0 ${dy}px`;
+      }
+    }
   }
 
   /** Slow cinematic orbit used for the demo capture. */

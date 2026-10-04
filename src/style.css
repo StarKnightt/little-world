@@ -28,12 +28,13 @@ button { cursor: pointer; }
 .labels { position: absolute; inset: 0; }
 
 /* 3D labels */
+.lab { position: absolute; pointer-events: none; }
 .tag {
-  position: absolute; display: flex; flex-direction: column; align-items: center; gap: 1px;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
   padding: 5px 10px 6px; border-radius: 12px; border: 1px solid var(--line);
   background: rgba(14, 20, 46, 0.66); backdrop-filter: blur(6px);
   font-size: 13px; line-height: 1.15; white-space: nowrap; pointer-events: auto;
-  transition: transform 0.25s, background 0.25s, opacity 0.3s; user-select: none;
+  transition: transform 0.25s, background 0.25s, opacity 0.3s, translate 0.35s ease; user-select: none;
 }
 .tag b { font-size: 14px; color: var(--sun); }
 .tag span { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
