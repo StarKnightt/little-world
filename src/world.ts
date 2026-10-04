@@ -129,7 +129,8 @@ export class World {
     host.appendChild(this.labels.domElement);
 
     this.camera = new THREE.PerspectiveCamera(mobile ? 50 : 38, 1, 0.1, 200);
-    this.camera.position.set(0, 9.5, mobile ? 25 : 21);
+    const capture = document.body.classList.contains('capture');
+    this.camera.position.set(0, capture ? 7.2 : 9.5, capture ? 15.5 : mobile ? 25 : 21);
     this.controls = new OrbitControls(this.camera, this.labels.domElement);
     this.controls.target.set(0, 0.6, 0);
     this.controls.enableDamping = true;

@@ -10,6 +10,7 @@ import type { GpuStatus, ParseResult } from './llm';
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const params = new URLSearchParams(location.search);
 const state = load();
+if (params.has('capture')) document.body.classList.add('capture');
 const world = new World($('stage'));
 let gpu: GpuStatus | null = null;
 let llm: typeof import('./llm') | null = null;
@@ -418,7 +419,6 @@ if (params.has('demo')) {
   state.welcomed = true;
   if (!state.routine || params.get('demo') === 'reset') setRoutine(demoRoutine());
 }
-if (params.has('capture')) document.body.classList.add('capture');
 if (params.has('orbit')) world.orbit(Number(params.get('orbit')) || 0.4);
 if (params.has('done')) {
   const n = Number(params.get('done'));
@@ -442,4 +442,28 @@ requestAnimationFrame(() => $('boot').remove());
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   import('virtual:pwa-register').then(({ registerSW }) => registerSW({ immediate: true }));
 }
-(window as any).__lw = { world, state, setPreview: (m: number | null) => ((previewMin = m), tick(), renderTasks()), toggleDone, askQuestion, ensureModel, showTab };
+/** Plays a day from `from` to `to` minutes over `ms`, marking tasks done at given minutes. Used for the demo recording. */
+function autoplay(from: number, to: number, ms: number, doneAt: [number, number][] = []) {
+  return new Promise<void>((resolve) => {
+    const t0 = performance.now();
+    const marked = new Set<number>();
+    const step = () => {
+      const k = Math.min(1, (performance.now() - t0) / ms);
+      const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      previewMin = Math.round(from + (to - from) * e);
+      for (const [at, i] of doneAt) {
+        if (previewMin >= at && !marked.has(i) && state.routine?.tasks[i]) {
+          marked.add(i);
+          toggleDone(state.routine.tasks[i].id);
+        }
+      }
+      tick();
+      renderTasks();
+      if (k < 1) requestAnimationFrame(step);
+      else resolve();
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+(window as any).__lw = { world, state, setPreview: (m: number | null) => ((previewMin = m), tick(), renderTasks()), toggleDone, askQuestion, ensureModel, showTab, autoplay };

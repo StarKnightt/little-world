@@ -41,24 +41,17 @@ async function scrub(from, to, ms, onMinute) {
   }
 }
 
-if (scene === 'day') {
-  await page.goto(`${base}/?demo=reset&t=06:20`);
+const DONE = [[7 * 60 + 12, 0], [8 * 60 + 45, 1], [12 * 60 + 45, 2], [16 * 60 + 15, 3], [19 * 60 + 45, 4], [20 * 60 + 50, 5]];
+if (scene === 'day' || scene === 'hero') {
+  const q = scene === 'hero' ? '&capture&orbit=0.35' : '';
+  await page.goto(`${base}/?demo=reset&t=06:00${q}`);
   await page.evaluate(() => localStorage.clear());
-  await page.goto(`${base}/?demo=reset&t=06:20`);
-  await wait(2600);
+  await page.goto(`${base}/?demo=reset&t=06:00${q}`);
+  await wait(2800);
   await start();
-  await wait(1200);
-  const doneAt = [[7 * 60 + 12, 0], [8 * 60 + 45, 1], [12 * 60 + 45, 2], [16 * 60 + 15, 3], [19 * 60 + 45, 4], [20 * 60 + 50, 5]];
-  const marked = new Set();
-  await scrub(6 * 60 + 20, 22 * 60 + 10, 12500, async (m) => {
-    for (const [at, idx] of doneAt) {
-      if (m >= at && !marked.has(idx)) {
-        marked.add(idx);
-        await lw((i) => window.__lw.toggleDone(window.__lw.state.routine.tasks[i].id), idx);
-      }
-    }
-  });
-  await wait(2600);
+  await wait(scene === 'hero' ? 300 : 1000);
+  await page.evaluate(([d, ms]) => window.__lw.autoplay(6 * 60, 22 * 60 + 30, ms, d), [DONE, scene === 'hero' ? 9000 : 14000]);
+  await wait(scene === 'hero' ? 1800 : 2600);
   await stop();
 } else if (scene === 'gemma') {
   await page.goto(`${base}/?demo=reset&t=10:05`);
