@@ -64,9 +64,9 @@ Three decisions mattered most:
 
 | Gemma 2 2B (q4f16) | Valid JSON | Right task count | Right times | Right food rule |
 |---|---|---|---|---|
-| Free text, no constraint | 12/20 (16/20 after one repair) | 11/20 | 31/54 | 13/19 |
+| Free text, no constraint | 11/20 (15/20 after one repair) | 11/20 | 32/54 | 14/17 |
 | Grammar, model alone | 20/20 | n/a | 40/54 | 11/21 |
-| **Grammar + quote check (shipped)** | **20/20** | **16/20** | **46/54 (85%)** | **17/21** |
+| **Grammar + quote check (shipped)** | **20/20** | **15/20** | **46/54 (85%)** | **17/21** |
 
 - Download: 1.4 GB once (42 shards). Loading from cache: about 4 to 6 s.
 - Speed: about 36 to 55 tokens/s decode, 550 to 700 tokens/s prefill. A typical routine parses in about 4 to 6 s; the long medicine sample takes about 10 s.

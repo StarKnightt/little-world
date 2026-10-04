@@ -50,8 +50,8 @@ export const CASES: Case[] = [
     expect: [{ at: t(8) }, { at: t(20) }],
   },
   {
-    id: 'mixed-amma',
-    text: 'Amma takes Amlodipine 5 mg after breakfast, Metformin 500 before lunch and dinner, calcium tablet after lunch, and her eye drops at 9 at night.',
+    id: 'mixed-grandma',
+    text: 'Grandma takes Amlodipine 5 mg after breakfast, Metformin 500 before lunch and dinner, calcium tablet after lunch, and her eye drops at 9 at night.',
     expect: [
       { at: t(8, 30), food: 'after_food' },
       { at: t(12, 30), food: 'before_food' },
@@ -72,7 +72,7 @@ export const CASES: Case[] = [
   },
   {
     id: 'plants',
-    text: 'Water the tulsi every morning at 7. Mist the fern at noon. Move the aloe inside at 6 in the evening.',
+    text: 'Water the basil every morning at 7. Mist the fern at noon. Move the aloe inside at 6 in the evening.',
     expect: [{ at: t(7) }, { at: t(12) }, { at: t(18) }],
   },
   {
@@ -81,8 +81,8 @@ export const CASES: Case[] = [
     expect: [{ at: t(18) }, { at: t(20, 30), food: 'after_food' }],
   },
   {
-    id: 'hinglish',
-    text: 'Subah khali pet thyroid ki goli, khane ke baad BP ki dawai, raat ko sone se pehle neend wali goli.',
+    id: 'loose-phrasing',
+    text: 'First thing, empty stomach, the thyroid one. BP medicine once I have eaten. Sleeping pill right before bed.',
     expect: [{ at: t(7), food: 'empty_stomach' }, { at: t(8, 30), food: 'after_food' }, { at: t(22) }],
   },
   {
