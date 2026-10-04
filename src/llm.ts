@@ -59,7 +59,8 @@ export function currentModel() {
 export async function hasCached(id: string) {
   const { hasModelInCache } = await import('@mlc-ai/web-llm');
   try {
-    return await hasModelInCache(id);
+    // a cache left half-written by a killed tab can make this hang, so never wait long
+    return await Promise.race([hasModelInCache(id), new Promise<boolean>((r) => setTimeout(() => r(false), 3000))]);
   } catch {
     return false;
   }

@@ -35,28 +35,39 @@ ${text.trim()}
 
 export function askPrompt(routine: Routine, done: Record<string, number>, now: Date, question: string) {
   const mins = now.getHours() * 60 + now.getMinutes();
-  const lines = routine.tasks.map((t) => {
-    const at = t.hour * 60 + t.minute;
-    const status = done[t.id]
-      ? `done at ${fmtTime(new Date(done[t.id]).getHours(), new Date(done[t.id]).getMinutes())}`
-      : at <= mins
-        ? 'NOT done yet (time has passed)'
-        : 'later today';
+  const at = (t: Routine['tasks'][number]) => t.hour * 60 + t.minute;
+  const desc = (t: Routine['tasks'][number]) => {
     const food = FOOD_LABEL[t.food] ? `, ${FOOD_LABEL[t.food]}` : '';
     const dose = t.dose ? ` (${t.dose})` : '';
     const note = t.note ? `, note: ${t.note}` : '';
-    return `- ${fmtTime(t.hour, t.minute)}: ${t.name}${dose}${food}${note}. Status: ${status}.`;
-  });
-  return `You are a gentle helper inside a reminder app. Answer the question using ONLY the person's own routine below.
+    return `${t.name}${dose} at ${fmtTime(t.hour, t.minute)}${food}${note}`;
+  };
+  const doneList = routine.tasks.filter((t) => done[t.id]);
+  const waiting = routine.tasks.filter((t) => !done[t.id] && at(t) <= mins);
+  const later = routine.tasks.filter((t) => !done[t.id] && at(t) > mins);
+  const ago = (t: Routine['tasks'][number]) => {
+    const d = mins - at(t);
+    return d >= 60 ? `${Math.floor(d / 60)} h ${d % 60} min ago` : `${d} min ago`;
+  };
+  const list = (ts: typeof routine.tasks) => (ts.length ? ts.map((t) => `- ${desc(t)}`).join('\n') : '- nothing');
+  return `You are a gentle helper inside a reminder app. You talk to the person directly, as "you". Answer using ONLY the facts below.
 
 Right now it is ${now.toLocaleDateString('en-US', { weekday: 'long' })}, ${fmtTime(now.getHours(), now.getMinutes())}.
 
-Their routine for today:
-${lines.join('\n')}
+Already done today:
+${list(doneList)}
+
+Time has passed but NOT done yet (remind them kindly):
+${list(waiting)}
+
+Still coming up later today:
+${list(later)}
+
+${waiting.length ? `Most urgent now: ${desc(waiting[0])}. It was due ${ago(waiting[0])} and is still not done.` : later.length ? `Next up: ${desc(later[0])}.` : 'Everything is done for today.'}
 
 Rules:
-- Answer in one to three short, kind sentences.
-- Only use facts from the routine above. If the answer is not there, say you can't see that in their notes.
+- Answer in one to three short, kind sentences, speaking to "you".
+- Only use the facts above. If the answer is not there, say you can't see that in your notes.
 - Do not give medical advice. If they ask whether something is safe, about side effects, mixing medicines, missed doses, or changing a dose, say kindly that their doctor or pharmacist is the right person to ask.
 
 Question: ${question.trim()}`;

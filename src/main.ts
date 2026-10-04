@@ -296,6 +296,7 @@ $('buildBtn').addEventListener('click', async () => {
     $('fixNote').textContent = res.fixes ? `${res.fixes} detail${res.fixes === 1 ? ' was' : 's were'} corrected from your own words.` : '';
     $('rawJson').textContent = JSON.stringify(JSON.parse(res.raw), null, 2);
     $('preview').hidden = false;
+    $('preview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } catch (e) {
     console.error(e);
     $('loadText').textContent = `Something went wrong loading Gemma: ${(e as Error).message}`;

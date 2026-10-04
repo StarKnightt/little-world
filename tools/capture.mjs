@@ -64,14 +64,23 @@ if (scene === 'day' || scene === 'hero') {
   await wait(500);
   await page.fill('#desc', '');
   const text = 'Amma: BP tablet after breakfast. Sugar tablet before lunch and before dinner. Eye drops at 4 pm, both eyes. Calcium after dinner, not with tea.';
-  await page.type('#desc', text, { delay: 18 });
+  await page.type('#desc', text, { delay: 9 });
   await wait(400);
   await page.click('#buildBtn');
   await page.waitForSelector('#preview:not([hidden])', { timeout: 180000 });
   await wait(2200);
   await page.click('#plantBtn');
-  await wait(3800);
+  await wait(3000);
+  await page.click('[data-tab="ask"]');
+  await wait(500);
+  await page.click('#askSamples button:nth-child(1)');
+  await page.waitForSelector('.a small', { timeout: 60000 });
+  await wait(1200);
+  await page.click('#askSamples button:nth-child(4)');
+  await page.waitForFunction(() => document.querySelectorAll('.a small').length >= 2, null, { timeout: 60000 });
+  await wait(2800);
   await stop();
+  console.log(await page.$$eval('.a', (as) => as.map((a) => a.textContent)));
 }
 
 await wait(300);
