@@ -7,21 +7,24 @@
       "f16": true,
       "adapter": "nvidia lovelace"
     },
-    "loadMs": 2130,
+    "loadMs": 2575,
     "cases": 5,
     "validFirstTry": 5,
     "validAfterRepair": 5,
-    "countExact": 0,
+    "countExact": 1,
     "timeHits": "0/11",
     "foodHits": "0/6",
-    "extraTasks": 8,
-    "avgDecodeTps": 55.6,
-    "avgPrefillTps": 1680,
-    "avgMs": 1947
+    "extraTasks": 5,
+    "modelOnlyTimeHits": "0/11",
+    "modelOnlyFoodHits": "0/6",
+    "quoteFixes": 0,
+    "avgDecodeTps": 45.1,
+    "avgPrefillTps": 1448,
+    "avgMs": 2152
   },
   "rows": [
     {
-      "id": "bp-sugar",
+      "id": "bp-diabetes",
       "ok": true,
       "attempts": 1,
       "countOk": false,
@@ -29,27 +32,35 @@
       "foodHits": 0,
       "foodTotal": 3,
       "extra": 1,
+      "modelOnly": {
+        "countOk": false,
+        "timeHits": 0,
+        "foodHits": 0,
+        "foodTotal": 3,
+        "extra": 1
+      },
+      "fixes": 0,
       "expected": 3,
       "got": 1,
       "stats": {
-        "promptTokens": 598,
-        "completionTokens": 59,
-        "decodeTps": 55.828917487106715,
-        "prefillTps": 1027.491408934708,
-        "ms": 1652.5999999996275
+        "promptTokens": 615,
+        "completionTokens": 72,
+        "decodeTps": 45.98875830353676,
+        "prefillTps": 847.4576271189704,
+        "ms": 2314.5
       },
-      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 10, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"tablet\"}]}",
+      "raw": "{\"title\": \"Blood pressure\", \"tasks\": [{\"said\": \"Blood\", \"name\": \"Blood\", \"dose\": \"blood\", \"when\": \"at_time\", \"hour\": 1, \"minute\": 2, \"food\": \"after_food\", \"icon\": \"meal\", \"note\": \"blood\"}]}",
       "spec": {
-        "title": "Iron",
+        "title": "Blood pressure",
         "tasks": [
           {
-            "name": "Iron",
-            "dose": "1",
-            "hour": 10,
-            "minute": 1,
-            "food": "with_food",
-            "icon": "water",
-            "note": "tablet"
+            "name": "Blood",
+            "dose": "blood",
+            "hour": 1,
+            "minute": 2,
+            "food": "after_food",
+            "icon": "meal",
+            "note": "blood"
           }
         ]
       }
@@ -58,59 +69,40 @@
       "id": "thyroid",
       "ok": true,
       "attempts": 1,
-      "countOk": false,
+      "countOk": true,
       "timeHits": 0,
       "foodHits": 0,
       "foodTotal": 1,
-      "extra": 4,
-      "expected": 1,
-      "got": 4,
-      "stats": {
-        "promptTokens": 609,
-        "completionTokens": 192,
-        "decodeTps": 53.352599549655196,
-        "prefillTps": 1792.2307239513382,
-        "ms": 3982.9000000003725
+      "extra": 1,
+      "modelOnly": {
+        "countOk": true,
+        "timeHits": 0,
+        "foodHits": 0,
+        "foodTotal": 1,
+        "extra": 1
       },
-      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 10, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}, {\"name\": \"iron\", \"dose\": \"1\", \"hour\": 10, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}, {\"name\": \"iron\", \"dose\": \"1\", \"hour\": 0, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}, {\"name\": \"iron\", \"dose\": \"1\", \"hour\": 0, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}]}",
+      "fixes": 0,
+      "expected": 1,
+      "got": 1,
+      "stats": {
+        "promptTokens": 617,
+        "completionTokens": 75,
+        "decodeTps": 44.65083050556625,
+        "prefillTps": 1720.1003624189564,
+        "ms": 2065.6999999997206
+      },
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"said\": \"Iron\", \"name\": \"Iron\", \"dose\": \"Iron\", \"when\": \"at_time\", \"hour\": 1, \"minute\": 1, \"food\": \"after_food\", \"icon\": \"water\", \"note\": \"Iron\"}]}",
       "spec": {
         "title": "Iron",
         "tasks": [
           {
             "name": "Iron",
-            "dose": "1",
-            "hour": 10,
+            "dose": "Iron",
+            "hour": 1,
             "minute": 1,
-            "food": "with_food",
+            "food": "after_food",
             "icon": "water",
-            "note": "1"
-          },
-          {
-            "name": "iron",
-            "dose": "1",
-            "hour": 10,
-            "minute": 1,
-            "food": "with_food",
-            "icon": "water",
-            "note": "1"
-          },
-          {
-            "name": "iron",
-            "dose": "1",
-            "hour": 0,
-            "minute": 1,
-            "food": "with_food",
-            "icon": "water",
-            "note": "1"
-          },
-          {
-            "name": "iron",
-            "dose": "1",
-            "hour": 0,
-            "minute": 1,
-            "food": "with_food",
-            "icon": "water",
-            "note": "1"
+            "note": "Iron"
           }
         ]
       }
@@ -124,27 +116,35 @@
       "foodHits": 0,
       "foodTotal": 0,
       "extra": 1,
+      "modelOnly": {
+        "countOk": false,
+        "timeHits": 0,
+        "foodHits": 0,
+        "foodTotal": 0,
+        "extra": 1
+      },
+      "fixes": 0,
       "expected": 2,
       "got": 1,
       "stats": {
-        "promptTokens": 600,
-        "completionTokens": 58,
-        "decodeTps": 55.598159508944335,
-        "prefillTps": 1876.1726078864815,
-        "ms": 1379.0999999996275
+        "promptTokens": 616,
+        "completionTokens": 72,
+        "decodeTps": 44.39785410371325,
+        "prefillTps": 1573.435504469987,
+        "ms": 2034.5
       },
-      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 1, \"minute\": 0, \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"hour\"}]}",
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"said\": \"Iron\", \"name\": \"Iron\", \"dose\": \"Iron\", \"when\": \"at_time\", \"hour\": 1, \"minute\": 0, \"food\": \"with_food\", \"icon\": \"meal\", \"note\": \"Iron\"}]}",
       "spec": {
         "title": "Iron",
         "tasks": [
           {
             "name": "Iron",
-            "dose": "1",
+            "dose": "Iron",
             "hour": 1,
             "minute": 0,
             "food": "with_food",
-            "icon": "pill",
-            "note": "hour"
+            "icon": "meal",
+            "note": "Iron"
           }
         ]
       }
@@ -158,27 +158,35 @@
       "foodHits": 0,
       "foodTotal": 2,
       "extra": 1,
+      "modelOnly": {
+        "countOk": false,
+        "timeHits": 0,
+        "foodHits": 0,
+        "foodTotal": 2,
+        "extra": 1
+      },
+      "fixes": 0,
       "expected": 2,
       "got": 1,
       "stats": {
-        "promptTokens": 602,
-        "completionTokens": 58,
-        "decodeTps": 55.502392344695465,
-        "prefillTps": 1851.7379267938784,
-        "ms": 1385.0999999996275
+        "promptTokens": 618,
+        "completionTokens": 83,
+        "decodeTps": 44.91828119921192,
+        "prefillTps": 1535.4037267080744,
+        "ms": 2273.2999999998137
       },
-      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 1, \"minute\": 0, \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"hour\"}]}",
+      "raw": "{\"title\": \"Amoxicillin\", \"tasks\": [{\"said\": \"Amoxicillin\", \"name\": \"Amoxicillin\", \"dose\": \"amoxicillin\", \"when\": \"at_time\", \"hour\": 0, \"minute\": 0, \"food\": \"with_food\", \"icon\": \"drops\", \"note\": \"amoxicillin\"}]}",
       "spec": {
-        "title": "Iron",
+        "title": "Amoxicillin",
         "tasks": [
           {
-            "name": "Iron",
-            "dose": "1",
-            "hour": 1,
+            "name": "Amoxicillin",
+            "dose": "amoxicillin",
+            "hour": 0,
             "minute": 0,
             "food": "with_food",
-            "icon": "pill",
-            "note": "hour"
+            "icon": "drops",
+            "note": "amoxicillin"
           }
         ]
       }
@@ -192,27 +200,35 @@
       "foodHits": 0,
       "foodTotal": 0,
       "extra": 1,
+      "modelOnly": {
+        "countOk": false,
+        "timeHits": 0,
+        "foodHits": 0,
+        "foodTotal": 0,
+        "extra": 1
+      },
+      "fixes": 0,
       "expected": 3,
       "got": 1,
       "stats": {
-        "promptTokens": 595,
-        "completionTokens": 58,
-        "decodeTps": 57.636887608346555,
-        "prefillTps": 1852.4283935178385,
-        "ms": 1336.1000000014901
+        "promptTokens": 612,
+        "completionTokens": 75,
+        "decodeTps": 45.32543663503451,
+        "prefillTps": 1563.6177823202495,
+        "ms": 2072.7000000001863
       },
-      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 1, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"hour\"}]}",
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"said\": \"Iron\", \"name\": \"Iron\", \"dose\": \"Iron\", \"when\": \"at_time\", \"hour\": 1, \"minute\": 1, \"food\": \"after_food\", \"icon\": \"water\", \"note\": \"Iron\"}]}",
       "spec": {
         "title": "Iron",
         "tasks": [
           {
             "name": "Iron",
-            "dose": "1",
+            "dose": "Iron",
             "hour": 1,
             "minute": 1,
-            "food": "with_food",
-            "icon": "pill",
-            "note": "hour"
+            "food": "after_food",
+            "icon": "water",
+            "note": "Iron"
           }
         ]
       }

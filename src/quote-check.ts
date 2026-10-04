@@ -1,16 +1,16 @@
 import type { Food, ModelRoutine, When } from './schema';
 
 const FOOD_PHRASES: [RegExp, Food][] = [
-  [/\b(empty stomach|khali pet)\b/i, 'empty_stomach'],
+  [/\bempty stomach\b/i, 'empty_stomach'],
   [/\bwith (food|meals?|milk)\b/i, 'with_food'],
-  [/\b(after (food|meals?)|khane ke baad)\b/i, 'after_food'],
+  [/\bafter (food|meals?)\b/i, 'after_food'],
   [/\bbefore (food|meals?)\b/i, 'before_food'],
 ];
 
 type Fix = { when: When; hour?: number; minute?: number };
 
 const PHRASES: [RegExp, When][] = [
-  [/\b(wake|waking|woke|first thing|subah khali pet)\b/i, 'wake_up'],
+  [/\b(wake|waking|woke|first thing)\b/i, 'wake_up'],
   [/\bbefore (my |the )?breakfast\b/i, 'before_breakfast'],
   [/\b(with|at|during) (my |the )?breakfast\b/i, 'with_breakfast'],
   [/\bafter (my |the )?breakfast\b/i, 'after_breakfast'],
@@ -20,7 +20,7 @@ const PHRASES: [RegExp, When][] = [
   [/\bbefore (my |the )?dinner\b/i, 'before_dinner'],
   [/\b(with|at|during) (my |the )?dinner\b/i, 'with_dinner'],
   [/\bafter (my |the )?dinner\b/i, 'after_dinner'],
-  [/\b(bed ?time|before (bed|sleep|sleeping)|sone se pehle)\b/i, 'bedtime'],
+  [/\b(bed ?time|before (bed|sleep|sleeping))\b/i, 'bedtime'],
 ];
 
 /** Clock times written with am/pm, as 24h "20:00", or as noon/midnight. Bare numbers are too ambiguous. */

@@ -21,7 +21,7 @@ export function simpleAnswer(routine: Routine, done: Record<string, number>, now
   const undone = routine.tasks.filter((t) => !done[t.id]);
   if (/\bnext\b|coming up|what now/i.test(q)) {
     const n = undone.find((t) => at(t) >= mins - 60) ?? undone[0];
-    return n ? `Next is ${n.name}${n.dose ? ` (${n.dose})` : ''} at ${when(n)}.` : 'Everything for today is done. Well done.';
+    return n ? `Next is ${n.name}${n.dose ? ` (${n.dose})` : ''} at ${when(n)}.` : 'Everything for today is done.';
   }
   if (/\b(did|have) i\b|taken|already/i.test(q)) {
     const list = hits.length ? hits : routine.tasks.filter((t) => at(t) <= mins);

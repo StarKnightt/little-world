@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Little World: a tiny island for your daily routine</title>
+    <title>Little World: a daily routine on a small 3D island</title>
     <meta name="description" content="Describe your daily medicines or plant care in plain words. Gemma, an open model running in your browser, turns it into a little 3D island that reminds you. Nothing leaves your device." />
     <meta name="theme-color" content="#0e1730" />
     <link rel="icon" href="./icon-192.png" />
@@ -26,7 +26,7 @@
       <header class="top">
         <div class="brand">
           <h1>Little World</h1>
-          <p id="routineTitle">your day, as a tiny island</p>
+          <p id="routineTitle">your daily routine at a glance</p>
         </div>
         <div class="clock">
           <b id="clock">--</b>
@@ -54,7 +54,7 @@
           </div>
           <button class="primary nowbtn" id="nowBtn" type="button">What do I do now?</button>
           <ol class="tasks" id="tasks"></ol>
-          <p class="empty" id="emptyToday">Your island is empty. Open <b>Describe</b> and tell it about your day.</p>
+          <p class="empty" id="emptyToday">No routine yet. Open <b>Describe</b> and enter your daily routine.</p>
 
           <div class="family" id="familyBox">
             <p><b>Setting this up for someone else?</b> Send this routine to their phone or tablet. It opens ready to use, in big text.</p>
@@ -64,7 +64,7 @@
           <details class="comfort" id="comfort">
             <summary>Comfort settings</summary>
             <label class="check"><input type="checkbox" id="optSpeak" /> <span>Read reminders aloud<small>uses this device's own voice</small></span></label>
-            <label class="check"><input type="checkbox" id="optRepeat" /> <span>Remind again until it's done<small>every 20 minutes, up to 3 times</small></span></label>
+            <label class="check"><input type="checkbox" id="optRepeat" /> <span>Remind again until it's done<small>again after 20 and 40 minutes</small></span></label>
             <label class="check"><input type="checkbox" id="optBig" /> <span>Start in big view<small>one thing at a time, large text</small></span></label>
             <label class="check"><input type="checkbox" id="optCalm" /> <span>Calm motion<small>slower, gentler movement on the island</small></span></label>
             <div class="row">
@@ -87,14 +87,14 @@
             <div class="bar" id="bar" hidden><i id="barFill"></i></div>
             <p id="loadText" class="muted tiny"></p>
           </div>
-          <button class="primary" id="buildBtn" type="button">Build my island with Gemma</button>
+          <button class="primary" id="buildBtn" type="button">Read my routine with Gemma</button>
           <div id="preview" hidden>
             <p class="ok" id="previewHead"></p>
             <ol class="mini" id="previewList"></ol>
             <p class="tiny muted" id="fixNote"></p>
             <details><summary>Show the JSON Gemma wrote</summary><pre id="rawJson"></pre></details>
             <div class="row">
-              <button class="primary" id="plantBtn" type="button">Plant these on my island</button>
+              <button class="primary" id="plantBtn" type="button">Save this routine</button>
               <button class="ghost" id="discardBtn" type="button">Try again</button>
             </div>
           </div>
@@ -130,7 +130,7 @@
       <div class="welcome" id="welcome" hidden>
         <div class="card">
           <h2>Little World</h2>
-          <p>A tiny island for the things you have to remember every day. Tell it about your medicines or your plants in plain words. <b>Gemma</b>, an open model, turns that into a little world that blooms as you go.</p>
+          <p>A daily routine tracker, shown as a small 3D island. Describe your medicines or other daily tasks in plain words. <b>Gemma</b>, an open model, turns them into a schedule, and each task is marked on the island as you complete it.</p>
           <p class="muted">Gemma runs inside this browser tab on your own GPU. Your routine never leaves this device.</p>
           <div class="choices">
             <button class="primary big" id="startDemo" type="button">Try the demo island<small>instant, nothing to download</small></button>

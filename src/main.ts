@@ -117,7 +117,7 @@ function renderTasks() {
   const due = r.tasks.filter((t) => states[t.id] === 'due' || states[t.id] === 'late');
   const next = r.tasks.find((t) => states[t.id] === 'upcoming');
   if (done === r.tasks.length) {
-    $('nextUp').textContent = 'All done for today. Your island is in full bloom.';
+    $('nextUp').textContent = 'All done for today.';
     $('nextSub').textContent = '';
   } else if (due.length) {
     $('nextUp').textContent = `Now: ${due[0].name}`;
@@ -160,14 +160,14 @@ function renderNow() {
   $('nowUndo').hidden = !undoId;
   if (!r) {
     $('nowKicker').textContent = 'Nothing planned yet';
-    $('nowTitle').textContent = 'Your island is empty';
-    $('nowDetail').textContent = 'Go back to the island and describe the day, or open a link someone sent you.';
+    $('nowTitle').textContent = 'No routine yet';
+    $('nowDetail').textContent = 'Go back and describe the routine, or open a link someone sent you.';
     $('nowIcon').hidden = true;
     $('nowDone').hidden = $('nowSpeak').hidden = true;
   } else if (!f) {
     $('nowKicker').textContent = 'All done for today';
     $('nowTitle').textContent = 'Nothing else to do';
-    $('nowDetail').textContent = 'Everything on your list is done. Your island is in full bloom.';
+    $('nowDetail').textContent = 'Everything on the list is done for today.';
     $('nowIcon').hidden = true;
     $('nowDone').hidden = true;
     $('nowSpeak').hidden = false;
@@ -210,7 +210,7 @@ $('nowDone').addEventListener('click', () => {
   undoId = id;
   clearTimeout(undoTimer);
   undoTimer = window.setTimeout(() => ((undoId = null), renderNow()), 15000);
-  toast('Done. Well done.', 3000);
+  toast('Marked as done.', 3000);
   renderNow();
 });
 $('nowUndo').addEventListener('click', () => {
@@ -408,7 +408,7 @@ $('buildBtn').addEventListener('click', async () => {
   btn.disabled = true;
   $('preview').hidden = true;
   try {
-    btn.textContent = 'Waking Gemma up…';
+    btn.textContent = 'Loading Gemma…';
     if (!(await ensureModel())) return;
     btn.textContent = 'Gemma is reading your routine…';
     const res = await llm!.parseRoutine(text, {
@@ -421,7 +421,7 @@ $('buildBtn').addEventListener('click', async () => {
     pending = { spec: res.spec, result: res, input: text };
     const s = res.stats;
     $('loadText').textContent = `${s.completionTokens} tokens in ${(s.ms / 1000).toFixed(1)} s (${s.decodeTps.toFixed(0)} tokens/s), checked by zod${res.attempts > 1 ? ' after one repair' : ''}`;
-    $('previewHead').textContent = `Gemma found ${res.spec.tasks.length} thing${res.spec.tasks.length === 1 ? '' : 's'} to remember. Check the times, then plant them.`;
+    $('previewHead').textContent = `Gemma found ${res.spec.tasks.length} thing${res.spec.tasks.length === 1 ? '' : 's'} to remember. Check the times, then save.`;
     res.spec.tasks.sort((a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute));
     renderPreview();
     $('fixNote').textContent = res.fixes ? `${res.fixes} detail${res.fixes === 1 ? ' was' : 's were'} corrected from your own words.` : '';
@@ -433,7 +433,7 @@ $('buildBtn').addEventListener('click', async () => {
     $('loadText').textContent = `Something went wrong loading Gemma: ${(e as Error).message}`;
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Build my island with Gemma';
+    btn.textContent = 'Read my routine with Gemma';
   }
 });
 
@@ -468,7 +468,7 @@ $('plantBtn').addEventListener('click', () => {
   showTab('today');
   $('panel').classList.remove('tall');
   setChip();
-  toast('Planted. Tap a flower or press Done when you finish something.');
+  toast('Routine saved. Press Done when you finish a task.');
 });
 $('discardBtn').addEventListener('click', () => {
   pending = null;
@@ -488,7 +488,7 @@ async function askQuestion(q: string) {
   a.className = 'a';
   box.appendChild(a);
   if (!r) {
-    a.textContent = 'Your island is empty, so there is nothing to answer from yet.';
+    a.textContent = 'There is no routine yet, so there is nothing to answer from.';
     return;
   }
   const done = todayDone();

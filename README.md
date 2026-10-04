@@ -1,6 +1,6 @@
 # Little World
 
-**A tiny island that keeps your day.** Describe a routine in plain words ("thyroid tablet when I wake up, Metformin before lunch and dinner, eye drops at 4"). Gemma, running entirely in your browser, turns it into a checked routine, and each task grows as a flower on a little low-poly island under a moving sun. Tap a flower when it's done and it blooms. Ask "what's next?" and Gemma answers from your routine and nothing else.
+**A daily routine tracker shown as a small 3D island.** Describe a routine in plain English ("Thyroid tablet when I wake up, Metformin before lunch and dinner, eye drops at 4 PM"). Gemma, running entirely in the browser, turns it into a validated schedule. Each task is placed on the rim of the island at its time of day, and the sun and moon follow the real clock. Mark a task as done when it is complete. Ask "What's next?" and Gemma answers using only the routine.
 
 Nothing leaves your device. No account, no server, no analytics. After the first load it works offline.
 
@@ -20,15 +20,15 @@ Nothing leaves your device. No account, no server, no analytics. After the first
 
 ## What it does
 
-- **Describe:** write your routine the way you'd say it out loud. Gemma 2 2B (in a Web Worker, on your GPU via WebGPU) turns it into a list of tasks with a time, a dose, a food rule and an icon. You see an editable preview first, so you can fix a time or remove a task before anything is planted.
-- **Today:** the island shows the day. The sun (and later the moon) moves along an arc from 6 am on the left to 6 pm on the right. Every task is a flower or lantern on the rim at its hour. It glows when due, droops a little when late, and blooms when you mark it done. The tree in the middle grows with your progress.
-- **"What do I do now?":** one button opens a big, calm screen with a single task in very large type, one large "I've done it" button (with undo), and the next few tasks underneath. It can be the default view, so the island is one tap away rather than in the way.
-- **Reminders:** a gentle toast and chime in the page, plus a system notification if you allow it. Optionally read aloud with the browser's own `speechSynthesis` (no voice service), and repeated gently after 20 and 40 minutes if a task is still waiting.
-- **Family setup:** someone else (a grandchild, say) can describe the routine once on a computer that runs Gemma, then press "Send to another device". That shows a QR code and a link. The routine is packed into the link's `#` fragment (deflate + base64url), which browsers never send to a server, so it moves from one device to the other without any backend. Opening the link shows the routine first and asks before replacing anything.
-- **Comfort settings:** read reminders aloud, repeat reminders, open in big view, calmer motion. Calmer motion is on by default when the system asks for reduced motion.
-- **Ask:** "What's next?", "Did I take my BP tablet?", "What did I miss?". Code computes the facts first (done, waiting and how long ago it was due, later), and Gemma only puts them into a friendly sentence. Medical questions get a polite redirect.
-- **Demo mode:** a precomputed routine (real Gemma output for the sample text) so anyone can try it instantly on any device, with a rule-based Ask.
-- **Offline:** a service worker precaches the app (about 0.9 MB). The model (about 1.4 GB) is cached by WebLLM in your browser's Cache Storage after the first download.
+- **Describe:** enter the routine in plain English. Gemma 2 2B (in a Web Worker, on the GPU through WebGPU) turns it into tasks with a time, a dose, a food rule and an icon. An editable preview is shown before anything is saved, so any time can be corrected and any task removed.
+- **Today:** the island shows the day. The sun, and later the moon, moves along an arc from 6 AM on the left to 6 PM on the right. Each task is a marker on the rim at its time. It is highlighted when due, marked when late, and shown as complete when done.
+- **"What do I do now?":** a full-screen view with one task in very large type, one large "I've done it" button with undo, and the next few tasks below. It can be set as the default view.
+- **Reminders:** an on-screen message and a sound, plus a system notification if allowed. Optionally read aloud with the browser's `speechSynthesis` (no external voice service), and repeated after 20 and 40 minutes while a task is still waiting.
+- **Setup by a family member:** the routine can be entered on a computer that runs Gemma, then sent with "Send to another device", which shows a QR code and a link. The routine is encoded in the link's `#` fragment (deflate + base64url), which browsers do not send to a server, so no backend is needed. Opening the link shows the routine and asks for confirmation before replacing anything.
+- **Comfort settings:** read reminders aloud, repeat reminders, start in the large view, reduced motion. Reduced motion is on by default when the system requests it.
+- **Ask:** "What's next?", "Did I take my eye drops?", "What's left today?". Code computes the facts first (done, waiting and for how long, next), and Gemma only phrases them as a short answer. Medical questions are referred to a doctor or pharmacist.
+- **Demo mode:** a precomputed routine (real Gemma output for the sample text), so the app can be tried on any device without a download, with a rule-based Ask.
+- **Offline:** a service worker precaches the app (about 0.9 MB). The model (about 1.4 GB) is cached by WebLLM in the browser's Cache Storage after the first download.
 
 ## How it works
 
@@ -64,13 +64,13 @@ Three decisions mattered most:
 
 | Gemma 2 2B (q4f16) | Valid JSON | Right task count | Right times | Right food rule |
 |---|---|---|---|---|
-| Free text, no constraint | 11/20 (15/20 after one repair) | 11/20 | 32/54 | 14/17 |
-| Grammar, model alone | 20/20 | n/a | 40/54 | 11/21 |
-| **Grammar + quote check (shipped)** | **20/20** | **15/20** | **46/54 (85%)** | **17/21** |
+| Free text, no constraint | 14/20 (17/20 after one repair) | 13/20 | 38/54 | 16/21 |
+| Grammar, model alone | 20/20 | n/a | 36/54 | 11/21 |
+| **Grammar + quote check (shipped)** | **20/20** | **17/20** | **47/54 (87%)** | **17/21** |
 
 - Download: 1.4 GB once (42 shards). Loading from cache: about 4 to 6 s.
-- Speed: about 36 to 55 tokens/s decode, 550 to 700 tokens/s prefill. A typical routine parses in about 4 to 6 s; the long medicine sample takes about 10 s.
-- Gemma 3 1B (537 MB) was the first choice but didn't work in this WebLLM build: its sliding-window attention config either failed to load or produced nonsense, so the app ships Gemma 2 2B.
+- Speed: about 36 to 55 tokens/s decode, 550 to 700 tokens/s prefill. A typical routine parses in about 4 to 6 s; the six-line medicine sample takes about 8 s.
+- Gemma 3 1B (537 MB) was the first choice but didn't work in this WebLLM build: its sliding-window attention config either failed to load or produced unusable output, so the app ships Gemma 2 2B.
 
 ## Privacy
 

@@ -84,7 +84,7 @@ if (scene === 'day' || scene === 'hero') {
   await page.click('#startOwn');
   await wait(500);
   await page.fill('#desc', '');
-  const text = 'BP tablet after breakfast. Sugar tablet before lunch and before dinner. Eye drops at 4 pm, both eyes. Calcium after dinner, not with tea.';
+  const text = 'Blood pressure tablet after breakfast. Diabetes tablet before lunch and before dinner. Eye drops at 4 PM, both eyes. Calcium tablet after dinner.';
   await page.type('#desc', text, { delay: 9 });
   await wait(400);
   await page.click('#buildBtn');

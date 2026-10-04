@@ -1,25 +1,25 @@
 import type { RoutineSpec } from './schema';
 
-export const MEDICINE_SAMPLE = `Thyroid tablet (50 mcg) as soon as I wake up, on an empty stomach.
-BP tablet Amlodipine 5 mg after breakfast.
+export const MEDICINE_SAMPLE = `Thyroid tablet, 50 mcg, when I wake up, on an empty stomach.
+Blood pressure tablet, Amlodipine 5 mg, after breakfast.
 Metformin 500 mg before lunch and before dinner.
-Eye drops in both eyes at 4 pm.
-Calcium tablet after dinner, not with the thyroid one.
-A short walk in the evening.`;
+Eye drops in both eyes at 4 PM.
+Calcium tablet after dinner, not with the thyroid tablet.
+A 20 minute walk at 6 PM.`;
 
-export const PLANT_SAMPLE = `Water the basil every morning at 7.
-Mist the fern at noon, it hates dry air.
-Turn the money plant towards the window at 3.
-Bring the aloe inside at 6 in the evening.
-Check the chilli seedlings before bed.`;
+export const PLANT_SAMPLE = `Water the plants at 7 AM.
+Mist the fern at noon.
+Turn the potted plants towards the window at 3 PM.
+Bring the aloe inside at 6 PM.
+Check the seedlings before bed.`;
 
 /**
  * The unedited output of Gemma 2 2B plus the quote check for MEDICINE_SAMPLE (see eval/), saved so the
- * demo works without WebGPU or a download. Gemma missed the evening walk; that is left in on purpose.
- * (The sample then also named a tablet brand in the brackets; none of these fields depended on it.)
+ * demo works without WebGPU or a download. Gemma missed the walk; that is left in on purpose. Only the title is
+ * written by hand (Gemma's was "Morning meds, blood pressure, and walk").
  */
 export const DEMO_SPEC: RoutineSpec = {
-  title: 'Morning, Lunch, Dinner, Eye Drops, and Evening Routine',
+  title: 'Daily medicines',
   tasks: [
     {
       name: 'Thyroid tablet',
@@ -31,7 +31,7 @@ export const DEMO_SPEC: RoutineSpec = {
       note: ''
     },
     {
-      name: 'BP tablet',
+      name: 'Blood pressure tablet',
       dose: '5 mg',
       hour: 8,
       minute: 30,
@@ -68,7 +68,7 @@ export const DEMO_SPEC: RoutineSpec = {
     },
     {
       name: 'Calcium tablet',
-      dose: '',
+      dose: '1 tablet',
       hour: 20,
       minute: 30,
       food: 'after_food',

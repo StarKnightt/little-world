@@ -7,24 +7,24 @@
       "f16": true,
       "adapter": "nvidia lovelace"
     },
-    "loadMs": 2937,
+    "loadMs": 7775,
     "cases": 20,
     "validFirstTry": 20,
     "validAfterRepair": 20,
-    "countExact": 15,
-    "timeHits": "46/54",
+    "countExact": 17,
+    "timeHits": "47/54",
     "foodHits": "17/21",
-    "extraTasks": 10,
-    "modelOnlyTimeHits": "40/54",
+    "extraTasks": 8,
+    "modelOnlyTimeHits": "36/54",
     "modelOnlyFoodHits": "11/21",
-    "quoteFixes": 28,
-    "avgDecodeTps": 48.7,
-    "avgPrefillTps": 689.2,
-    "avgMs": 4482
+    "quoteFixes": 31,
+    "avgDecodeTps": 43.4,
+    "avgPrefillTps": 677.8,
+    "avgMs": 4814
   },
   "rows": [
     {
-      "id": "bp-sugar",
+      "id": "bp-diabetes",
       "ok": true,
       "attempts": 1,
       "countOk": true,
@@ -43,18 +43,18 @@
       "expected": 3,
       "got": 3,
       "stats": {
-        "promptTokens": 617,
-        "completionTokens": 117,
-        "decodeTps": 47.36075129543678,
-        "prefillTps": 484.79610277391464,
-        "ms": 3775.599999997765
+        "promptTokens": 618,
+        "completionTokens": 119,
+        "decodeTps": 37.870349743798,
+        "prefillTps": 498.26654841578073,
+        "ms": 4426.399999999907
       },
-      "raw": "{\"title\": \"Morning and Dinner Medications\", \"tasks\": [{\"said\": \"BP tablet after breakfast\", \"name\": \"BP tablet\", \"dose\": \"1 tablet\", \"when\": \"with_breakfast\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Sugar tablet before lunch and before dinner\", \"name\": \"Sugar tablet\", \"dose\": \"1 tablet\", \"when\": \"before_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
+      "raw": "{\"title\": \"Blood Pressure and Diabetes\", \"tasks\": [{\"said\": \"Blood pressure tablet after breakfast\", \"name\": \"Blood pressure tablet\", \"dose\": \"1 tablet\", \"when\": \"with_breakfast\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Diabetes tablet before lunch and before dinner\", \"name\": \"Diabetes tablet\", \"dose\": \"1 tablet\", \"when\": \"before_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
-        "title": "Morning and Dinner Medications",
+        "title": "Blood Pressure and Diabetes",
         "tasks": [
           {
-            "name": "BP tablet",
+            "name": "Blood pressure tablet",
             "dose": "",
             "hour": 8,
             "minute": 30,
@@ -63,7 +63,7 @@
             "note": ""
           },
           {
-            "name": "Sugar tablet",
+            "name": "Diabetes tablet",
             "dose": "",
             "hour": 12,
             "minute": 30,
@@ -72,7 +72,7 @@
             "note": ""
           },
           {
-            "name": "Sugar tablet",
+            "name": "Diabetes tablet",
             "dose": "",
             "hour": 19,
             "minute": 30,
@@ -87,29 +87,29 @@
       "id": "thyroid",
       "ok": true,
       "attempts": 1,
-      "countOk": false,
+      "countOk": true,
       "timeHits": 1,
       "foodHits": 1,
       "foodTotal": 1,
-      "extra": 1,
+      "extra": 0,
       "modelOnly": {
-        "countOk": false,
+        "countOk": true,
         "timeHits": 1,
         "foodHits": 1,
         "foodTotal": 1,
-        "extra": 1
+        "extra": 0
       },
       "fixes": 0,
       "expected": 1,
-      "got": 2,
+      "got": 1,
       "stats": {
-        "promptTokens": 629,
-        "completionTokens": 139,
-        "decodeTps": 39.509962764058855,
-        "prefillTps": 697.5712542980145,
-        "ms": 4755.10000000149
+        "promptTokens": 621,
+        "completionTokens": 78,
+        "decodeTps": 40.553187064624225,
+        "prefillTps": 697.2044459416131,
+        "ms": 2835.399999999907
       },
-      "raw": "{\"title\": \"Thyroid Medication\", \"tasks\": [{\"said\": \"Thyroxine 50 mcg first thing when I wake up, empty stomach\", \"name\": \"Thyroxine\", \"dose\": \"50 mcg\", \"when\": \"wake_up\", \"food\": \"empty_stomach\", \"icon\": \"pill\", \"note\": \"first thing when I wake up\"}, {\"said\": \"Wait 30 min before tea\", \"name\": \"Wait\", \"dose\": \"\", \"when\": \"before_breakfast\", \"food\": \"with_food\", \"icon\": \"other\", \"note\": \"30 min before tea\"}]}",
+      "raw": "{\"title\": \"Thyroid Medication\", \"tasks\": [{\"said\": \"Thyroxine 50 mcg when I wake up, on an empty stomach\", \"name\": \"Thyroxine\", \"dose\": \"50 mcg\", \"when\": \"wake_up\", \"food\": \"empty_stomach\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
         "title": "Thyroid Medication",
         "tasks": [
@@ -120,16 +120,7 @@
             "minute": 0,
             "food": "empty_stomach",
             "icon": "pill",
-            "note": "first thing when I wake up"
-          },
-          {
-            "name": "Wait",
-            "dose": "",
-            "hour": 7,
-            "minute": 30,
-            "food": "before_food",
-            "icon": "other",
-            "note": "30 min before tea"
+            "note": ""
           }
         ]
       }
@@ -156,9 +147,9 @@
       "stats": {
         "promptTokens": 619,
         "completionTokens": 144,
-        "decodeTps": 47.92970310208123,
-        "prefillTps": 719.7674418604652,
-        "ms": 3908.699999999255
+        "decodeTps": 45.22044969225107,
+        "prefillTps": 653.781157583246,
+        "ms": 4177.4000000003725
       },
       "raw": "{\"title\": \"Eye Drops\", \"tasks\": [{\"said\": \"Eye drops in both eyes at 10 am\", \"name\": \"Eye drops\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 10, \"minute\": 0, \"food\": \"any\", \"icon\": \"drops\", \"note\": \"both eyes\"}, {\"said\": \"Eye drops in both eyes at 6 pm\", \"name\": \"Eye drops\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 18, \"minute\": 0, \"food\": \"any\", \"icon\": \"drops\", \"note\": \"both eyes\"}]}",
       "spec": {
@@ -207,9 +198,9 @@
       "stats": {
         "promptTokens": 621,
         "completionTokens": 148,
-        "decodeTps": 42.775802768608216,
-        "prefillTps": 626.9560827864715,
-        "ms": 4496.400000002235
+        "decodeTps": 44.945185095276045,
+        "prefillTps": 645.6643792886458,
+        "ms": 4305
       },
       "raw": "{\"title\": \"Amoxicillin\", \"tasks\": [{\"said\": \"Amoxicillin 500mg twice a day with food for the infection\", \"name\": \"Amoxicillin\", \"dose\": \"500 mg\", \"when\": \"morning\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"with food for infection\"}, {\"said\": \"Amoxicillin 500mg twice a day with food for the infection\", \"name\": \"Amoxicillin\", \"dose\": \"500 mg\", \"when\": \"night\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"with food for infection\"}]}",
       "spec": {
@@ -240,56 +231,38 @@
       "id": "thrice",
       "ok": true,
       "attempts": 1,
-      "countOk": true,
-      "timeHits": 3,
+      "countOk": false,
+      "timeHits": 1,
       "foodHits": 0,
       "foodTotal": 0,
       "extra": 0,
       "modelOnly": {
-        "countOk": true,
-        "timeHits": 3,
+        "countOk": false,
+        "timeHits": 1,
         "foodHits": 0,
         "foodTotal": 0,
         "extra": 0
       },
       "fixes": 0,
       "expected": 3,
-      "got": 3,
+      "got": 1,
       "stats": {
         "promptTokens": 615,
-        "completionTokens": 179,
-        "decodeTps": 46.70702431893735,
-        "prefillTps": 532.605871655319,
-        "ms": 5033.5
+        "completionTokens": 68,
+        "decodeTps": 47.41319202334457,
+        "prefillTps": 689.6165059428205,
+        "ms": 2343.1999999997206
       },
-      "raw": "{\"title\": \"Paractamol\", \"tasks\": [{\"said\": \"paracetamol syrup 5 ml three times a day\", \"name\": \"Paractamol\", \"dose\": \"5 ml\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"syrup\", \"note\": \"\"}, {\"said\": \"paracetamol syrup 5 ml three times a day\", \"name\": \"Paractamol\", \"dose\": \"5 ml\", \"when\": \"afternoon\", \"food\": \"any\", \"icon\": \"syrup\", \"note\": \"\"}, {\"said\": \"paracetamol syrup 5 ml three times a day\", \"name\": \"Paractamol\", \"dose\": \"5 ml\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"syrup\", \"note\": \" \"}]}",
+      "raw": "{\"title\": \"Paracetamol\", \"tasks\": [{\"said\": \"Paracetamol syrup 5 ml three times a day\", \"name\": \"Paracetamol\", \"dose\": \"5 ml\", \"when\": \"morning\", \"food\": \"empty_stomach\", \"icon\": \"syrup\", \"note\": \"\"}]}",
       "spec": {
-        "title": "Paractamol",
+        "title": "Paracetamol",
         "tasks": [
           {
-            "name": "Paractamol",
+            "name": "Paracetamol",
             "dose": "5 ml",
             "hour": 8,
             "minute": 0,
-            "food": "any",
-            "icon": "syrup",
-            "note": ""
-          },
-          {
-            "name": "Paractamol",
-            "dose": "5 ml",
-            "hour": 14,
-            "minute": 0,
-            "food": "any",
-            "icon": "syrup",
-            "note": ""
-          },
-          {
-            "name": "Paractamol",
-            "dose": "5 ml",
-            "hour": 20,
-            "minute": 0,
-            "food": "any",
+            "food": "empty_stomach",
             "icon": "syrup",
             "note": ""
           }
@@ -316,15 +289,15 @@
       "expected": 3,
       "got": 3,
       "stats": {
-        "promptTokens": 623,
-        "completionTokens": 167,
-        "decodeTps": 49.03112155068814,
-        "prefillTps": 668.885548634856,
-        "ms": 4386.400000002235
+        "promptTokens": 624,
+        "completionTokens": 169,
+        "decodeTps": 45.10997224007992,
+        "prefillTps": 696.8174204355109,
+        "ms": 4690.5
       },
-      "raw": "{\"title\": \"Insulin and Sugar Check\", \"tasks\": [{\"said\": \"Insulin 10 units before breakfast\", \"name\": \"Insulin\", \"dose\": \"10 units\", \"when\": \"before_breakfast\", \"food\": \"empty_stomach\", \"icon\": \"injection\", \"note\": \"before breakfast\"}, {\"said\": \"Insulin 8 units before dinner\", \"name\": \"Insulin\", \"dose\": \"8 units\", \"when\": \"before_dinner\", \"food\": \"any\", \"icon\": \"injection\", \"note\": \"before dinner\"}, {\"said\": \"Check sugar at bedtime\", \"name\": \"Sugar Check\", \"dose\": \"\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"other\", \"note\": \"bedtime\"}]}",
+      "raw": "{\"title\": \"Insulin and Blood Glucose\", \"tasks\": [{\"said\": \"Insulin 10 units before breakfast\", \"name\": \"Insulin\", \"dose\": \"10 units\", \"when\": \"before_breakfast\", \"food\": \"empty_stomach\", \"icon\": \"injection\", \"note\": \"before breakfast\"}, {\"said\": \"Insulin 8 units before dinner\", \"name\": \"Insulin\", \"dose\": \"8 units\", \"when\": \"before_dinner\", \"food\": \"any\", \"icon\": \"injection\", \"note\": \"before dinner\"}, {\"said\": \"Check blood glucose at bedtime\", \"name\": \"Blood Glucose Check\", \"dose\": \"\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"other\", \"note\": \"bedtime\"}]}",
       "spec": {
-        "title": "Insulin and Sugar Check",
+        "title": "Insulin and Blood Glucose",
         "tasks": [
           {
             "name": "Insulin",
@@ -345,7 +318,7 @@
             "note": "before dinner"
           },
           {
-            "name": "Sugar Check",
+            "name": "Blood Glucose Check",
             "dose": "",
             "hour": 22,
             "minute": 0,
@@ -376,15 +349,15 @@
       "expected": 2,
       "got": 2,
       "stats": {
-        "promptTokens": 619,
-        "completionTokens": 132,
-        "decodeTps": 45.08042758105963,
-        "prefillTps": 685.0376272703975,
-        "ms": 3871.2999999970198
+        "promptTokens": 623,
+        "completionTokens": 139,
+        "decodeTps": 46.324068519592025,
+        "prefillTps": 698.8222097588334,
+        "ms": 3938.7000000001863
       },
-      "raw": "{\"title\": \"Inhaler\", \"tasks\": [{\"said\": \"Two puffs of the brown inhaler morning and night\", \"name\": \"Inhaler\", \"dose\": \"2 puffs\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"inhaler\", \"note\": \"rinse mouth after\"}, {\"said\": \"Two puffs of the brown inhaler morning and night\", \"name\": \"Inhaler\", \"dose\": \"2 puffs\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"inhaler\", \"note\": \"rinse mouth after\"}]}",
+      "raw": "{\"title\": \"Inhaler Routine\", \"tasks\": [{\"said\": \"Two puffs of the preventer inhaler in the morning and at night\", \"name\": \"Inhaler\", \"dose\": \"2 puffs\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"inhaler\", \"note\": \"Rinse mouth afterwards\"}, {\"said\": \"Two puffs of the preventer inhaler in the morning and at night\", \"name\": \"Inhaler\", \"dose\": \"2 puffs\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"inhaler\", \"note\": \"Rinse mouth afterwards\"}]}",
       "spec": {
-        "title": "Inhaler",
+        "title": "Inhaler Routine",
         "tasks": [
           {
             "name": "Inhaler",
@@ -393,7 +366,7 @@
             "minute": 0,
             "food": "any",
             "icon": "inhaler",
-            "note": "rinse mouth after"
+            "note": "Rinse mouth afterwards"
           },
           {
             "name": "Inhaler",
@@ -402,13 +375,13 @@
             "minute": 0,
             "food": "any",
             "icon": "inhaler",
-            "note": "rinse mouth after"
+            "note": "Rinse mouth afterwards"
           }
         ]
       }
     },
     {
-      "id": "mixed-grandma",
+      "id": "mixed",
       "ok": true,
       "attempts": 1,
       "countOk": false,
@@ -427,15 +400,15 @@
       "expected": 5,
       "got": 4,
       "stats": {
-        "promptTokens": 642,
-        "completionTokens": 246,
-        "decodeTps": 45.44362957915002,
-        "prefillTps": 614.0602582496413,
-        "ms": 6528.5
+        "promptTokens": 639,
+        "completionTokens": 248,
+        "decodeTps": 40.1352947840264,
+        "prefillTps": 704.6757829732369,
+        "ms": 7186.100000000093
       },
-      "raw": "{\"title\": \"Medications and Eye Drops\", \"tasks\": [{\"said\": \"Amlodipine 5 mg after breakfast\", \"name\": \"Amlodipine\", \"dose\": \"5 mg\", \"when\": \"with_breakfast\", \"food\": \"after_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Metformin 500 before lunch and dinner\", \"name\": \"Metformin\", \"dose\": \"500 mg\", \"when\": \"before_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"calcium tablet after lunch\", \"name\": \"Calcium tablet\", \"dose\": \"1 tablet\", \"when\": \"after_lunch\", \"food\": \"after_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"her eye drops at 9 at night\", \"name\": \"Eye drops\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 21, \"minute\": 0, \"food\": \"any\", \"icon\": \"drops\", \"note\": \"at 9\"}]}",
+      "raw": "{\"title\": \"Morning meds, lunch meds, and eye drops\", \"tasks\": [{\"said\": \"Amlodipine 5 mg after breakfast\", \"name\": \"Amlodipine\", \"dose\": \"5 mg\", \"when\": \"with_breakfast\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Metformin 500 mg before lunch and dinner\", \"name\": \"Metformin\", \"dose\": \"500 mg\", \"when\": \"before_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"calcium tablet after lunch\", \"name\": \"Calcium tablet\", \"dose\": \"1 tablet\", \"when\": \"after_lunch\", \"food\": \"after_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Eye drops at 9 PM\", \"name\": \"Eye drops\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 21, \"minute\": 0, \"food\": \"any\", \"icon\": \"drops\", \"note\": \"both eyes\"}]}",
       "spec": {
-        "title": "Medications and Eye Drops",
+        "title": "Morning meds, lunch meds, and eye drops",
         "tasks": [
           {
             "name": "Amlodipine",
@@ -471,7 +444,7 @@
             "minute": 0,
             "food": "any",
             "icon": "drops",
-            "note": "at 9"
+            "note": "both eyes"
           }
         ]
       }
@@ -496,13 +469,13 @@
       "expected": 2,
       "got": 2,
       "stats": {
-        "promptTokens": 631,
-        "completionTokens": 181,
-        "decodeTps": 47.44802998977106,
-        "prefillTps": 718.3515482677532,
-        "ms": 4741.099999997765
+        "promptTokens": 627,
+        "completionTokens": 179,
+        "decodeTps": 43.655342292024464,
+        "prefillTps": 665.4638081088791,
+        "ms": 5098.399999999907
       },
-      "raw": "{\"title\": \"Levetiracetam\", \"tasks\": [{\"said\": \"Levetiracetam 500 mg at 8:00 and 20:00 sharp\", \"name\": \"Levetiracetam\", \"dose\": \"500 mg\", \"when\": \"at_time\", \"hour\": 8, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Levetiracetam 500 mg at 8:00 and 20:00 sharp\", \"name\": \"Levetiracetam\", \"dose\": \"500 mg\", \"when\": \"at_time\", \"hour\": 20, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
+      "raw": "{\"title\": \"Levetiracetam\", \"tasks\": [{\"said\": \"Levetiracetam 500 mg at 8:00 and 20:00\", \"name\": \"Levetiracetam\", \"dose\": \"500 mg\", \"when\": \"at_time\", \"hour\": 8, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Levetiracetam 500 mg at 8:00 and 20:00\", \"name\": \"Levetiracetam\", \"dose\": \"500 mg\", \"when\": \"at_time\", \"hour\": 20, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
         "title": "Levetiracetam",
         "tasks": [
@@ -532,35 +505,35 @@
       "ok": true,
       "attempts": 1,
       "countOk": true,
-      "timeHits": 1,
+      "timeHits": 2,
       "foodHits": 0,
       "foodTotal": 0,
-      "extra": 1,
+      "extra": 0,
       "modelOnly": {
         "countOk": true,
-        "timeHits": 2,
+        "timeHits": 0,
         "foodHits": 0,
         "foodTotal": 0,
-        "extra": 0
+        "extra": 2
       },
-      "fixes": 1,
+      "fixes": 2,
       "expected": 2,
       "got": 2,
       "stats": {
-        "promptTokens": 622,
-        "completionTokens": 152,
-        "decodeTps": 48.85417671103896,
-        "prefillTps": 709.1551704498747,
-        "ms": 4026.199999999255
+        "promptTokens": 620,
+        "completionTokens": 117,
+        "decodeTps": 44.690603514140896,
+        "prefillTps": 642.686845651684,
+        "ms": 3615.2000000001863
       },
-      "raw": "{\"title\": \"Water Reminders\", \"tasks\": [{\"said\": \"drink a glass of water at 11 and at 4pm\", \"name\": \"Water\", \"dose\": \"1 glass\", \"when\": \"at_time\", \"hour\": 11, \"minute\": 0, \"food\": \"any\", \"icon\": \"water\", \"note\": \"\"}, {\"said\": \"drink a glass of water at 11 and at 4pm\", \"name\": \"Water\", \"dose\": \"1 glass\", \"when\": \"at_time\", \"hour\": 16, \"minute\": 0, \"food\": \"any\", \"icon\": \"water\", \"note\": \"\"}]}",
+      "raw": "{\"title\": \"Water Time\", \"tasks\": [{\"said\": \"Drink a glass of water at 11 AM\", \"name\": \"Water\", \"dose\": \"1 glass\", \"when\": \"with_breakfast\", \"food\": \"any\", \"icon\": \"water\", \"note\": \"\"}, {\"said\": \"Drink a glass of water at 4 PM\", \"name\": \"Water\", \"dose\": \"1 glass\", \"when\": \"with_lunch\", \"food\": \"any\", \"icon\": \"water\", \"note\": \"\"}]}",
       "spec": {
-        "title": "Water Reminders",
+        "title": "Water Time",
         "tasks": [
           {
             "name": "Water",
             "dose": "1 glass",
-            "hour": 16,
+            "hour": 11,
             "minute": 0,
             "food": "any",
             "icon": "water",
@@ -583,57 +556,57 @@
       "ok": true,
       "attempts": 1,
       "countOk": true,
-      "timeHits": 2,
+      "timeHits": 3,
       "foodHits": 0,
       "foodTotal": 0,
-      "extra": 1,
+      "extra": 0,
       "modelOnly": {
         "countOk": true,
-        "timeHits": 1,
+        "timeHits": 0,
         "foodHits": 0,
         "foodTotal": 0,
-        "extra": 2
+        "extra": 3
       },
-      "fixes": 1,
+      "fixes": 3,
       "expected": 3,
       "got": 3,
       "stats": {
-        "promptTokens": 630,
-        "completionTokens": 173,
-        "decodeTps": 46.34838986176703,
-        "prefillTps": 706.5156442755707,
-        "ms": 4668.60000000149
+        "promptTokens": 627,
+        "completionTokens": 153,
+        "decodeTps": 45.808383233520146,
+        "prefillTps": 706.1606036716587,
+        "ms": 4275.200000000186
       },
-      "raw": "{\"title\": \"Morning care, noon care, evening care\", \"tasks\": [{\"said\": \"Water the basil every morning at 7\", \"name\": \"Basil care\", \"dose\": \"\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"plant\", \"note\": \"every morning at 7\"}, {\"said\": \"Mist the fern at noon\", \"name\": \"Fern misting\", \"dose\": \"\", \"when\": \"with_lunch\", \"food\": \"any\", \"icon\": \"water\", \"note\": \"\"}, {\"said\": \"Move the aloe inside at 6 in the evening\", \"name\": \"Aloe care\", \"dose\": \"\", \"when\": \"evening\", \"food\": \"any\", \"icon\": \"plant\", \"note\": \"at 6 in the evening\"}]}",
+      "raw": "{\"title\": \"Plant Care\", \"tasks\": [{\"said\": \"Water the plants at 7 AM\", \"name\": \"Water plants\", \"dose\": \"\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"plant\", \"note\": \"\"}, {\"said\": \"Mist the fern at noon\", \"name\": \"Mist fern\", \"dose\": \"\", \"when\": \"with_lunch\", \"food\": \"any\", \"icon\": \"plant\", \"note\": \"\"}, {\"said\": \"Move the aloe inside at 6 PM\", \"name\": \"Move aloe\", \"dose\": \"\", \"when\": \"before_dinner\", \"food\": \"any\", \"icon\": \"plant\", \"note\": \"\"}]}",
       "spec": {
-        "title": "Morning care, noon care, evening care",
+        "title": "Plant Care",
         "tasks": [
           {
-            "name": "Basil care",
+            "name": "Water plants",
             "dose": "",
-            "hour": 8,
+            "hour": 7,
             "minute": 0,
             "food": "any",
             "icon": "plant",
-            "note": "every morning at 7"
+            "note": ""
           },
           {
-            "name": "Fern misting",
+            "name": "Mist fern",
             "dose": "",
             "hour": 12,
             "minute": 0,
             "food": "any",
-            "icon": "water",
+            "icon": "plant",
             "note": ""
           },
           {
-            "name": "Aloe care",
+            "name": "Move aloe",
             "dose": "",
             "hour": 18,
             "minute": 0,
             "food": "any",
             "icon": "plant",
-            "note": "at 6 in the evening"
+            "note": ""
           }
         ]
       }
@@ -660,9 +633,9 @@
       "stats": {
         "promptTokens": 620,
         "completionTokens": 119,
-        "decodeTps": 45.735808447240665,
-        "prefillTps": 652.6315789473684,
-        "ms": 3581.5
+        "decodeTps": 45.57466201986117,
+        "prefillTps": 686.2962143015983,
+        "ms": 3547.600000000093
       },
       "raw": "{\"title\": \"Evening walk and Vitamin D\", \"tasks\": [{\"said\": \"Evening walk for 20 minutes\", \"name\": \"Evening walk\", \"dose\": \"\", \"when\": \"evening\", \"food\": \"after_food\", \"icon\": \"walk\", \"note\": \"20 minutes\"}, {\"said\": \"the vitamin D capsule after dinner\", \"name\": \"Vitamin D capsule\", \"dose\": \"1 capsule\", \"when\": \"after_dinner\", \"food\": \"after_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
@@ -693,34 +666,34 @@
       "id": "loose-phrasing",
       "ok": true,
       "attempts": 1,
-      "countOk": false,
+      "countOk": true,
       "timeHits": 2,
       "foodHits": 1,
       "foodTotal": 2,
-      "extra": 0,
+      "extra": 1,
       "modelOnly": {
-        "countOk": false,
+        "countOk": true,
         "timeHits": 1,
         "foodHits": 0,
         "foodTotal": 2,
-        "extra": 1
+        "extra": 2
       },
       "fixes": 2,
       "expected": 3,
-      "got": 2,
+      "got": 3,
       "stats": {
-        "promptTokens": 627,
-        "completionTokens": 125,
-        "decodeTps": 49.90816896847335,
-        "prefillTps": 757.8871026223079,
-        "ms": 3352.699999999255
+        "promptTokens": 626,
+        "completionTokens": 176,
+        "decodeTps": 44.69160254945174,
+        "prefillTps": 667.5197270208192,
+        "ms": 4935.399999999907
       },
-      "raw": "{\"title\": \"Morning and Bedtime Meds\", \"tasks\": [{\"said\": \"First thing, empty stomach, the thyroid one\", \"name\": \"Thyroid\", \"dose\": \"1 tablet\", \"when\": \"with_breakfast\", \"food\": \"empty_stomach\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Sleeping pill right before bed\", \"name\": \"Sleeping Pill\", \"dose\": \"1 pill\", \"when\": \"before_dinner\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"right before bed\"}]}",
+      "raw": "{\"title\": \"Morning, Eating and Bedtime Meds\", \"tasks\": [{\"said\": \"Thyroid tablet first thing on an empty stomach\", \"name\": \"Thyroid tablet\", \"dose\": \"1 tablet\", \"when\": \"with_breakfast\", \"food\": \"empty_stomach\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Blood pressure tablet after eating\", \"name\": \"Blood pressure tablet\", \"dose\": \"1 tablet\", \"when\": \"with_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Sleeping tablet right before bed\", \"name\": \"Sleeping tablet\", \"dose\": \"1 tablet\", \"when\": \"before_dinner\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
-        "title": "Morning and Bedtime Meds",
+        "title": "Morning, Eating and Bedtime Meds",
         "tasks": [
           {
-            "name": "Thyroid",
+            "name": "Thyroid tablet",
             "dose": "1 tablet",
             "hour": 7,
             "minute": 0,
@@ -729,13 +702,22 @@
             "note": ""
           },
           {
-            "name": "Sleeping Pill",
-            "dose": "1 pill",
+            "name": "Blood pressure tablet",
+            "dose": "1 tablet",
+            "hour": 13,
+            "minute": 0,
+            "food": "with_food",
+            "icon": "pill",
+            "note": ""
+          },
+          {
+            "name": "Sleeping tablet",
+            "dose": "1 tablet",
             "hour": 22,
             "minute": 0,
             "food": "any",
             "icon": "pill",
-            "note": "right before bed"
+            "note": ""
           }
         ]
       }
@@ -762,9 +744,9 @@
       "stats": {
         "promptTokens": 636,
         "completionTokens": 153,
-        "decodeTps": 54.20534259219408,
-        "prefillTps": 758.4068685891604,
-        "ms": 3687.800000000745
+        "decodeTps": 45.01588796043445,
+        "prefillTps": 691.9060052217919,
+        "ms": 4364.899999999907
       },
       "raw": "{\"title\": \"Morning and Evening Meds\", \"tasks\": [{\"said\": \"Omeprazole 20mg at 7:30 am before food\", \"name\": \"Omeprazole\", \"dose\": \"20mg\", \"when\": \"before_breakfast\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Atorvastatin 10 mg at 9:30 pm\", \"name\": \"Atorvastatin\", \"dose\": \"10 mg\", \"when\": \"at_time\", \"hour\": 21, \"minute\": 30, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
@@ -811,13 +793,13 @@
       "expected": 1,
       "got": 1,
       "stats": {
-        "promptTokens": 608,
+        "promptTokens": 609,
         "completionTokens": 62,
-        "decodeTps": 54.45283681689441,
-        "prefillTps": 719.1861840529838,
-        "ms": 1993.2999999970198
+        "decodeTps": 42.50359909502496,
+        "prefillTps": 700.4025301897642,
+        "ms": 2351.899999999907
       },
-      "raw": "{\"title\": \"Aspirin\", \"tasks\": [{\"said\": \"aspirin after lunch\", \"name\": \"Aspirin\", \"dose\": \"1 tablet\", \"when\": \"after_lunch\", \"food\": \"after_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
+      "raw": "{\"title\": \"Aspirin\", \"tasks\": [{\"said\": \"Aspirin after lunch\", \"name\": \"Aspirin\", \"dose\": \"1 tablet\", \"when\": \"after_lunch\", \"food\": \"after_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
         "title": "Aspirin",
         "tasks": [
@@ -854,17 +836,17 @@
       "got": 10,
       "stats": {
         "promptTokens": 662,
-        "completionTokens": 405,
-        "decodeTps": 51.677937986277946,
-        "prefillTps": 747.431410184664,
-        "ms": 8810.400000002235
+        "completionTokens": 408,
+        "decodeTps": 44.17496751837506,
+        "prefillTps": 690.4463913226206,
+        "ms": 10349.399999999907
       },
-      "raw": "{\"title\": \"Morning, Lunch, Dinner, Bedtime Routine\", \"tasks\": [{\"said\": \"wake up 6am\", \"name\": \"Wake Up\", \"dose\": \"\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"thyroid tablet\", \"name\": \"Thyroid Tablet\", \"dose\": \"1 tablet\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Breakfast at 8\", \"name\": \"Breakfast\", \"dose\": \"\", \"when\": \"morning\", \"food\": \"with_food\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"BP pill\", \"name\": \"BP Pill\", \"dose\": \"1 pill\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Diabetes tablet with lunch at 1\", \"name\": \"Diabetes Tablet\", \"dose\": \"1 tablet\", \"when\": \"before_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Ear drops at 4 pm\", \"name\": \"Ear Drops\", \"dose\": \"\", \"when\": \"afternoon\", \"food\": \"any\", \"icon\": \"drops\", \"note\": \"both eyes\"}, {\"said\": \"Diabetes tablet again with dinner at 8:30 pm\", \"name\": \"Diabetes Tablet\", \"dose\": \"1 tablet\", \"when\": \"before_dinner\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Sleeping pill at 10:30\", \"name\": \"Sleeping Pill\", \"dose\": \"1 pill\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
+      "raw": "{\"title\": \"Morning, Lunch, Dinner, Bedtime Routine\", \"tasks\": [{\"said\": \"Wake up at 6 AM\", \"name\": \"Wake up\", \"dose\": \"\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"thyroid tablet\", \"name\": \"Thyroid tablet\", \"dose\": \"1 tablet\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Breakfast at 8\", \"name\": \"Breakfast\", \"dose\": \"\", \"when\": \"morning\", \"food\": \"with_food\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"blood pressure tablet\", \"name\": \"Blood pressure tablet\", \"dose\": \"1 tablet\", \"when\": \"morning\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Diabetes tablet with lunch at 1\", \"name\": \"Diabetes tablet\", \"dose\": \"1 tablet\", \"when\": \"before_lunch\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Ear drops at 4 PM\", \"name\": \"Ear drops\", \"dose\": \"\", \"when\": \"afternoon\", \"food\": \"any\", \"icon\": \"drops\", \"note\": \"both eyes\"}, {\"said\": \"Diabetes tablet again with dinner at 8:30 PM\", \"name\": \"Diabetes tablet\", \"dose\": \"1 tablet\", \"when\": \"before_dinner\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"Sleeping tablet at 10:30\", \"name\": \"Sleeping tablet\", \"dose\": \"1 tablet\", \"when\": \"night\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
         "title": "Morning, Lunch, Dinner, Bedtime Routine",
         "tasks": [
           {
-            "name": "Wake Up",
+            "name": "Wake up",
             "dose": "",
             "hour": 7,
             "minute": 0,
@@ -873,7 +855,7 @@
             "note": ""
           },
           {
-            "name": "Wake Up",
+            "name": "Wake up",
             "dose": "",
             "hour": 6,
             "minute": 0,
@@ -882,7 +864,7 @@
             "note": ""
           },
           {
-            "name": "Thyroid Tablet",
+            "name": "Thyroid tablet",
             "dose": "1 tablet",
             "hour": 8,
             "minute": 0,
@@ -900,8 +882,8 @@
             "note": ""
           },
           {
-            "name": "BP Pill",
-            "dose": "1 pill",
+            "name": "Blood pressure tablet",
+            "dose": "1 tablet",
             "hour": 8,
             "minute": 0,
             "food": "any",
@@ -909,7 +891,7 @@
             "note": ""
           },
           {
-            "name": "Diabetes Tablet",
+            "name": "Diabetes tablet",
             "dose": "1 tablet",
             "hour": 13,
             "minute": 0,
@@ -918,7 +900,7 @@
             "note": ""
           },
           {
-            "name": "Ear Drops",
+            "name": "Ear drops",
             "dose": "",
             "hour": 16,
             "minute": 0,
@@ -927,7 +909,7 @@
             "note": "both eyes"
           },
           {
-            "name": "Diabetes Tablet",
+            "name": "Diabetes tablet",
             "dose": "1 tablet",
             "hour": 20,
             "minute": 0,
@@ -936,7 +918,7 @@
             "note": ""
           },
           {
-            "name": "Diabetes Tablet",
+            "name": "Diabetes tablet",
             "dose": "1 tablet",
             "hour": 20,
             "minute": 30,
@@ -945,8 +927,8 @@
             "note": ""
           },
           {
-            "name": "Sleeping Pill",
-            "dose": "1 pill",
+            "name": "Sleeping tablet",
+            "dose": "1 tablet",
             "hour": 10,
             "minute": 30,
             "food": "any",
@@ -957,7 +939,7 @@
       }
     },
     {
-      "id": "messy",
+      "id": "descriptive",
       "ok": true,
       "attempts": 1,
       "countOk": true,
@@ -972,41 +954,41 @@
         "foodTotal": 1,
         "extra": 1
       },
-      "fixes": 2,
+      "fixes": 3,
       "expected": 3,
       "got": 3,
       "stats": {
-        "promptTokens": 641,
-        "completionTokens": 213,
-        "decodeTps": 52.14581242240241,
-        "prefillTps": 735.5134825014343,
-        "ms": 5006
+        "promptTokens": 638,
+        "completionTokens": 199,
+        "decodeTps": 36.55333296593442,
+        "prefillTps": 707.944962272745,
+        "ms": 6588.4000000003725
       },
-      "raw": "{\"title\": \"Morning and Bedtime Meds\", \"tasks\": [{\"said\": \"the white one (prednisolone 10mg) goes with breakfast\", \"name\": \"Prednisolone\", \"dose\": \"10mg\", \"when\": \"with_breakfast\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"the pink one is at bedtime\", \"name\": \"Pink Meds\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 23, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"bedtime\"}, {\"said\": \"dont forget the iron at 11 not with milk\", \"name\": \"Iron\", \"dose\": \"1 tablet\", \"when\": \"at_time\", \"hour\": 11, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"not with milk\"}]}",
+      "raw": "{\"title\": \"Morning, Bedtime and Iron\", \"tasks\": [{\"said\": \"The white tablet (prednisolone 10 mg) with breakfast\", \"name\": \"Prednisolone\", \"dose\": \"10 mg\", \"when\": \"with_breakfast\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"not with milk\"}, {\"said\": \"The pink tablet at bedtime\", \"name\": \"Pink Tablet\", \"dose\": \"\", \"when\": \"before_dinner\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"The iron tablet at 11, not with milk\", \"name\": \"Iron Tablet\", \"dose\": \"1 tablet\", \"when\": \"at_time\", \"hour\": 11, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"not with milk\"}]}",
       "spec": {
-        "title": "Morning and Bedtime Meds",
+        "title": "Morning, Bedtime and Iron",
         "tasks": [
           {
             "name": "Prednisolone",
-            "dose": "10mg",
+            "dose": "10 mg",
             "hour": 8,
             "minute": 0,
             "food": "with_food",
             "icon": "pill",
-            "note": ""
+            "note": "not with milk"
           },
           {
-            "name": "Pink Meds",
+            "name": "Pink Tablet",
             "dose": "",
             "hour": 22,
             "minute": 0,
             "food": "any",
             "icon": "pill",
-            "note": "bedtime"
+            "note": ""
           },
           {
-            "name": "Iron",
-            "dose": "1 tablet",
+            "name": "Iron Tablet",
+            "dose": "",
             "hour": 11,
             "minute": 0,
             "food": "with_food",
@@ -1020,43 +1002,52 @@
       "id": "pet",
       "ok": true,
       "attempts": 1,
-      "countOk": false,
-      "timeHits": 2,
+      "countOk": true,
+      "timeHits": 3,
       "foodHits": 0,
       "foodTotal": 0,
       "extra": 0,
       "modelOnly": {
-        "countOk": false,
-        "timeHits": 2,
+        "countOk": true,
+        "timeHits": 3,
         "foodHits": 0,
         "foodTotal": 0,
         "extra": 0
       },
-      "fixes": 2,
+      "fixes": 1,
       "expected": 3,
-      "got": 2,
+      "got": 3,
       "stats": {
         "promptTokens": 625,
-        "completionTokens": 127,
-        "decodeTps": 54.978354978266324,
-        "prefillTps": 753.465943339361,
-        "ms": 3161.900000002235
+        "completionTokens": 190,
+        "decodeTps": 45.93699378637475,
+        "prefillTps": 699.2615797719068,
+        "ms": 5096.200000000186
       },
-      "raw": "{\"title\": \"Cat Care\", \"tasks\": [{\"said\": \"Feed the cat at 8 and 7pm\", \"name\": \"Feed cat\", \"dose\": \"\", \"when\": \"before_dinner\", \"food\": \"with_food\", \"icon\": \"other\", \"note\": \"at 8 and 7pm\"}, {\"said\": \"give her the kidney pill with the evening food\", \"name\": \"Kidney pill\", \"dose\": \"1 pill\", \"when\": \"before_dinner\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
+      "raw": "{\"title\": \"Cat feeding and Kidney tablet\", \"tasks\": [{\"said\": \"Feed the cat at 8 AM\", \"name\": \"Cat feeding\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 8, \"minute\": 0, \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"Feed the cat at 7 PM\", \"name\": \"Cat feeding\", \"dose\": \"\", \"when\": \"at_time\", \"hour\": 19, \"minute\": 0, \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"Give the kidney tablet with the evening meal\", \"name\": \"Kidney tablet\", \"dose\": \"1 tablet\", \"when\": \"before_dinner\", \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
-        "title": "Cat Care",
+        "title": "Cat feeding and Kidney tablet",
         "tasks": [
           {
-            "name": "Feed cat",
+            "name": "Cat feeding",
+            "dose": "",
+            "hour": 8,
+            "minute": 0,
+            "food": "any",
+            "icon": "other",
+            "note": ""
+          },
+          {
+            "name": "Cat feeding",
             "dose": "",
             "hour": 19,
             "minute": 0,
-            "food": "with_food",
+            "food": "any",
             "icon": "other",
-            "note": "at 8 and 7pm"
+            "note": ""
           },
           {
-            "name": "Kidney pill",
+            "name": "Kidney tablet",
             "dose": "",
             "hour": 19,
             "minute": 30,
@@ -1089,9 +1080,9 @@
       "stats": {
         "promptTokens": 617,
         "completionTokens": 130,
-        "decodeTps": 54.06079760562879,
-        "prefillTps": 743.7319189957711,
-        "ms": 3261.199999999255
+        "decodeTps": 40.02832773960013,
+        "prefillTps": 700.6586418350383,
+        "ms": 4178.899999999907
       },
       "raw": "{\"title\": \"Vitamin B12 and Magnesium\", \"tasks\": [{\"said\": \"Vitamin B12 at noon\", \"name\": \"Vitamin B12\", \"dose\": \"1 tablet\", \"when\": \"before_lunch\", \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}, {\"said\": \"magnesium at 9 pm\", \"name\": \"Magnesium\", \"dose\": \"1 tablet\", \"when\": \"at_time\", \"hour\": 21, \"minute\": 0, \"food\": \"any\", \"icon\": \"pill\", \"note\": \"\"}]}",
       "spec": {
@@ -1140,9 +1131,9 @@
       "stats": {
         "promptTokens": 626,
         "completionTokens": 289,
-        "decodeTps": 50.72667275193172,
-        "prefillTps": 751.410394909231,
-        "ms": 6594.79999999702
+        "decodeTps": 41.534326899628596,
+        "prefillTps": 712.4971545643813,
+        "ms": 7976.899999999907
       },
       "raw": "{\"title\": \"Antibiotic Eye Ointment\", \"tasks\": [{\"said\": \"Antibiotic eye ointment four times a day\", \"name\": \"Antibiotic Eye Ointment\", \"dose\": \"4 times\", \"when\": \"at_time\", \"hour\": 8, \"minute\": 0, \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"Antibiotic eye ointment four times a day\", \"name\": \"Antibiotic Eye Ointment\", \"dose\": \"4 times\", \"when\": \"at_time\", \"hour\": 12, \"minute\": 0, \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"Antibiotic eye ointment four times a day\", \"name\": \"Antibiotic Eye Ointment\", \"dose\": \"4 times\", \"when\": \"at_time\", \"hour\": 4, \"minute\": 0, \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}, {\"said\": \"Antibiotic eye ointment four times a day\", \"name\": \"Antibiotic Eye Ointment\", \"dose\": \"4 times\", \"when\": \"at_time\", \"hour\": 8, \"minute\": 0, \"food\": \"any\", \"icon\": \"other\", \"note\": \"\"}]}",
       "spec": {
