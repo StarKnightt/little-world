@@ -1,0 +1,221 @@
+{
+  "summary": {
+    "modelId": "gemma3-1b-it-q4f16_1-MLC",
+    "mode": "grammar",
+    "gpu": {
+      "ok": true,
+      "f16": true,
+      "adapter": "nvidia lovelace"
+    },
+    "loadMs": 2130,
+    "cases": 5,
+    "validFirstTry": 5,
+    "validAfterRepair": 5,
+    "countExact": 0,
+    "timeHits": "0/11",
+    "foodHits": "0/6",
+    "extraTasks": 8,
+    "avgDecodeTps": 55.6,
+    "avgPrefillTps": 1680,
+    "avgMs": 1947
+  },
+  "rows": [
+    {
+      "id": "bp-sugar",
+      "ok": true,
+      "attempts": 1,
+      "countOk": false,
+      "timeHits": 0,
+      "foodHits": 0,
+      "foodTotal": 3,
+      "extra": 1,
+      "expected": 3,
+      "got": 1,
+      "stats": {
+        "promptTokens": 598,
+        "completionTokens": 59,
+        "decodeTps": 55.828917487106715,
+        "prefillTps": 1027.491408934708,
+        "ms": 1652.5999999996275
+      },
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 10, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"tablet\"}]}",
+      "spec": {
+        "title": "Iron",
+        "tasks": [
+          {
+            "name": "Iron",
+            "dose": "1",
+            "hour": 10,
+            "minute": 1,
+            "food": "with_food",
+            "icon": "water",
+            "note": "tablet"
+          }
+        ]
+      }
+    },
+    {
+      "id": "thyroid",
+      "ok": true,
+      "attempts": 1,
+      "countOk": false,
+      "timeHits": 0,
+      "foodHits": 0,
+      "foodTotal": 1,
+      "extra": 4,
+      "expected": 1,
+      "got": 4,
+      "stats": {
+        "promptTokens": 609,
+        "completionTokens": 192,
+        "decodeTps": 53.352599549655196,
+        "prefillTps": 1792.2307239513382,
+        "ms": 3982.9000000003725
+      },
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 10, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}, {\"name\": \"iron\", \"dose\": \"1\", \"hour\": 10, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}, {\"name\": \"iron\", \"dose\": \"1\", \"hour\": 0, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}, {\"name\": \"iron\", \"dose\": \"1\", \"hour\": 0, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"water\", \"note\": \"1\"}]}",
+      "spec": {
+        "title": "Iron",
+        "tasks": [
+          {
+            "name": "Iron",
+            "dose": "1",
+            "hour": 10,
+            "minute": 1,
+            "food": "with_food",
+            "icon": "water",
+            "note": "1"
+          },
+          {
+            "name": "iron",
+            "dose": "1",
+            "hour": 10,
+            "minute": 1,
+            "food": "with_food",
+            "icon": "water",
+            "note": "1"
+          },
+          {
+            "name": "iron",
+            "dose": "1",
+            "hour": 0,
+            "minute": 1,
+            "food": "with_food",
+            "icon": "water",
+            "note": "1"
+          },
+          {
+            "name": "iron",
+            "dose": "1",
+            "hour": 0,
+            "minute": 1,
+            "food": "with_food",
+            "icon": "water",
+            "note": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "eyedrops-exact",
+      "ok": true,
+      "attempts": 1,
+      "countOk": false,
+      "timeHits": 0,
+      "foodHits": 0,
+      "foodTotal": 0,
+      "extra": 1,
+      "expected": 2,
+      "got": 1,
+      "stats": {
+        "promptTokens": 600,
+        "completionTokens": 58,
+        "decodeTps": 55.598159508944335,
+        "prefillTps": 1876.1726078864815,
+        "ms": 1379.0999999996275
+      },
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 1, \"minute\": 0, \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"hour\"}]}",
+      "spec": {
+        "title": "Iron",
+        "tasks": [
+          {
+            "name": "Iron",
+            "dose": "1",
+            "hour": 1,
+            "minute": 0,
+            "food": "with_food",
+            "icon": "pill",
+            "note": "hour"
+          }
+        ]
+      }
+    },
+    {
+      "id": "twice",
+      "ok": true,
+      "attempts": 1,
+      "countOk": false,
+      "timeHits": 0,
+      "foodHits": 0,
+      "foodTotal": 2,
+      "extra": 1,
+      "expected": 2,
+      "got": 1,
+      "stats": {
+        "promptTokens": 602,
+        "completionTokens": 58,
+        "decodeTps": 55.502392344695465,
+        "prefillTps": 1851.7379267938784,
+        "ms": 1385.0999999996275
+      },
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 1, \"minute\": 0, \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"hour\"}]}",
+      "spec": {
+        "title": "Iron",
+        "tasks": [
+          {
+            "name": "Iron",
+            "dose": "1",
+            "hour": 1,
+            "minute": 0,
+            "food": "with_food",
+            "icon": "pill",
+            "note": "hour"
+          }
+        ]
+      }
+    },
+    {
+      "id": "thrice",
+      "ok": true,
+      "attempts": 1,
+      "countOk": false,
+      "timeHits": 0,
+      "foodHits": 0,
+      "foodTotal": 0,
+      "extra": 1,
+      "expected": 3,
+      "got": 1,
+      "stats": {
+        "promptTokens": 595,
+        "completionTokens": 58,
+        "decodeTps": 57.636887608346555,
+        "prefillTps": 1852.4283935178385,
+        "ms": 1336.1000000014901
+      },
+      "raw": "{\"title\": \"Iron\", \"tasks\": [{\"name\": \"Iron\", \"dose\": \"1\", \"hour\": 1, \"minute\": 1, \"food\": \"with_food\", \"icon\": \"pill\", \"note\": \"hour\"}]}",
+      "spec": {
+        "title": "Iron",
+        "tasks": [
+          {
+            "name": "Iron",
+            "dose": "1",
+            "hour": 1,
+            "minute": 1,
+            "food": "with_food",
+            "icon": "pill",
+            "note": "hour"
+          }
+        ]
+      }
+    }
+  ]
+}

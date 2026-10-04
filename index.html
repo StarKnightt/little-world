@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Little World · a tiny island for your daily routine</title>
+    <meta name="description" content="Describe your daily medicines or plant care in plain words. Gemma, an open model running in your browser, turns it into a little 3D island that reminds you. Nothing leaves your device." />
+    <meta name="theme-color" content="#0e1730" />
+    <link rel="icon" href="./icon-192.png" />
+    <link rel="apple-touch-icon" href="./icon-192.png" />
+    <meta property="og:title" content="Little World" />
+    <meta property="og:description" content="A tiny 3D island for your daily routine. Gemma runs on your device." />
+    <meta property="og:image" content="https://starknightt.github.io/little-world/og.png" />
+    <style>
+      html, body { margin: 0; height: 100%; background: #0e1730; }
+      #boot { position: fixed; inset: 0; display: grid; place-items: center; color: #f6eedf; font: 600 18px/1.4 Georgia, serif; background: radial-gradient(ellipse at 50% 30%, #2a3f78, #0e1730 70%); }
+      #boot i { display: block; width: 46px; height: 46px; margin: 0 auto 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff4c8, #ffb347 60%, #ff8a3d); box-shadow: 0 0 40px #ffb34788; animation: b 1.6s ease-in-out infinite alternate; }
+      @keyframes b { to { transform: translateY(-8px); } }
+    </style>
+  </head>
+  <body>
+    <div id="boot"><div><i></i>Little World</div></div>
+    <div id="app">
+      <div id="stage" aria-label="3D view of your day as a small island"></div>
+
+      <header class="top">
+        <div class="brand">
+          <h1>Little World</h1>
+          <p id="routineTitle">your day, as a tiny island</p>
+        </div>
+        <div class="clock">
+          <b id="clock">--</b>
+          <span id="dateLabel"></span>
+        </div>
+      </header>
+
+      <button class="chip" id="modelChip" type="button" title="Where the AI runs"></button>
+
+      <aside class="panel" id="panel">
+        <div class="grip" id="grip" aria-hidden="true"></div>
+        <nav class="tabs" role="tablist">
+          <button role="tab" data-tab="today" aria-selected="true">Today</button>
+          <button role="tab" data-tab="describe">Describe</button>
+          <button role="tab" data-tab="ask">Ask</button>
+        </nav>
+
+        <section class="tab" id="tab-today">
+          <div class="summary">
+            <div class="ringwrap"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" class="bg" /><circle cx="18" cy="18" r="15.5" class="fg" id="ring" /></svg><b id="count">0/0</b></div>
+            <div>
+              <p class="next" id="nextUp">Nothing planned yet.</p>
+              <p class="muted" id="nextSub"></p>
+            </div>
+          </div>
+          <ol class="tasks" id="tasks"></ol>
+          <p class="empty" id="emptyToday">Your island is empty. Open <b>Describe</b> and tell it about your day.</p>
+          <div class="row small">
+            <button class="ghost" id="notifyBtn" type="button">Turn on reminders</button>
+            <button class="ghost" id="resetBtn" type="button">Clear everything</button>
+          </div>
+        </section>
+
+        <section class="tab" id="tab-describe" hidden>
+          <label for="desc" class="lbl">Describe the routine in your own words</label>
+          <textarea id="desc" rows="7" spellcheck="true" placeholder="BP tablet after breakfast. Sugar tablet before lunch and dinner. Eye drops at 10 and 6."></textarea>
+          <div class="row samples">
+            <button class="pill" data-sample="med" type="button">Medicines example</button>
+            <button class="pill" data-sample="plant" type="button">Plant care example</button>
+          </div>
+          <div class="modelbox" id="modelBox">
+            <p id="gpuLine" class="muted">Checking your GPU…</p>
+            <div class="bar" id="bar" hidden><i id="barFill"></i></div>
+            <p id="loadText" class="muted tiny"></p>
+          </div>
+          <button class="primary" id="buildBtn" type="button">Build my island with Gemma</button>
+          <div id="preview" hidden>
+            <p class="ok" id="previewHead"></p>
+            <ol class="mini" id="previewList"></ol>
+            <details><summary>Show the JSON Gemma wrote</summary><pre id="rawJson"></pre></details>
+            <div class="row">
+              <button class="primary" id="plantBtn" type="button">Plant these on my island</button>
+              <button class="ghost" id="discardBtn" type="button">Try again</button>
+            </div>
+          </div>
+          <p class="tiny muted">Your words are read by Gemma inside this browser tab. Nothing is uploaded. Check your routine against your prescription before relying on it.</p>
+        </section>
+
+        <section class="tab" id="tab-ask" hidden>
+          <div class="row samples" id="askSamples">
+            <button class="pill" type="button">What's next?</button>
+            <button class="pill" type="button">Did I take my eye drops?</button>
+            <button class="pill" type="button">What's left today?</button>
+            <button class="pill" type="button">Can I take calcium with my thyroid tablet?</button>
+          </div>
+          <div class="answers" id="answers"></div>
+          <form class="ask" id="askForm">
+            <input id="askInput" autocomplete="off" placeholder="Ask about your routine…" aria-label="Ask about your routine" />
+            <button class="primary" type="submit">Ask</button>
+          </form>
+          <p class="tiny muted">Answers come only from the routine you typed. Little World is not a doctor.</p>
+        </section>
+
+        <p class="disclaimer">Not medical advice. Little World only repeats what you told it. Always follow your doctor's or pharmacist's instructions.</p>
+      </aside>
+
+      <div class="timebar" id="timebar">
+        <button class="ghost tiny" id="liveBtn" type="button">Live</button>
+        <input type="range" id="scrub" min="0" max="1439" step="1" aria-label="Preview another time of day" />
+        <span id="scrubLabel" class="tiny">preview the day</span>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+      <div class="welcome" id="welcome" hidden>
+        <div class="card">
+          <h2>Little World</h2>
+          <p>A tiny island for the things you have to remember every day. Tell it about your medicines or your plants in plain words. <b>Gemma</b>, an open model, turns that into a little world that blooms as you go.</p>
+          <p class="muted">Gemma runs inside this browser tab on your own GPU. Your routine never leaves this device.</p>
+          <div class="choices">
+            <button class="primary big" id="startDemo" type="button">Try the demo island<small>instant, nothing to download</small></button>
+            <button class="ghost big" id="startOwn" type="button">Describe my own routine<small id="ownSub">downloads Gemma once (about 1.4 GB)</small></button>
+          </div>
+          <p class="disclaimer">Not medical advice. Always follow your doctor's or pharmacist's instructions.</p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
