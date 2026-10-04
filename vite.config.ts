@@ -30,8 +30,17 @@ export default defineConfig(({ command }) => ({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,webmanifest,woff2}'],
-        maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}', '**/*latin-wght*.woff2'],
+        // the WebLLM runtime is only fetched by people who load Gemma, so cache it on first use instead
+        globIgnores: ['**/lib-*.js', '**/llm.worker-*.js', '**/llm-*.js'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.includes('/assets/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'little-world-runtime', expiration: { maxEntries: 40 } },
+          },
+        ],
+        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         navigateFallback: 'index.html',
       },
     }),

@@ -278,11 +278,10 @@ $('buildBtn').addEventListener('click', async () => {
     pending = { spec: res.spec, result: res, input: text };
     const s = res.stats;
     $('loadText').textContent = `${s.completionTokens} tokens in ${(s.ms / 1000).toFixed(1)} s · ${s.decodeTps.toFixed(0)} tokens/s · checked by zod${res.attempts > 1 ? ' after one repair' : ''}`;
-    $('previewHead').textContent = `Gemma found ${res.spec.tasks.length} thing${res.spec.tasks.length === 1 ? '' : 's'} to remember. Does this look right?`;
-    $('previewList').innerHTML = [...res.spec.tasks]
-      .sort((a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute))
-      .map((t) => `<li><b>${fmtTime(t.hour, t.minute)}</b> ${escapeHtml(t.name)}${t.dose ? ` (${escapeHtml(t.dose)})` : ''}${FOOD_LABEL[t.food] ? `, ${FOOD_LABEL[t.food]}` : ''}${t.note ? ` · <i>${escapeHtml(t.note)}</i>` : ''}</li>`)
-      .join('');
+    $('previewHead').textContent = `Gemma found ${res.spec.tasks.length} thing${res.spec.tasks.length === 1 ? '' : 's'} to remember. Check the times, then plant them.`;
+    res.spec.tasks.sort((a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute));
+    renderPreview();
+    $('fixNote').textContent = res.fixes ? `${res.fixes} detail${res.fixes === 1 ? ' was' : 's were'} corrected from your own words.` : '';
     $('rawJson').textContent = JSON.stringify(JSON.parse(res.raw), null, 2);
     $('preview').hidden = false;
   } catch (e) {
@@ -293,6 +292,26 @@ $('buildBtn').addEventListener('click', async () => {
     btn.textContent = 'Build my island with Gemma';
   }
 });
+
+function renderPreview() {
+  if (!pending) return;
+  const list = $('previewList');
+  list.innerHTML = '';
+  pending.spec.tasks.forEach((t, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<input type="time" value="${String(t.hour).padStart(2, '0')}:${String(t.minute).padStart(2, '0')}" aria-label="Time for ${escapeHtml(t.name)}" /><span>${escapeHtml(t.name)}${t.dose ? ` (${escapeHtml(t.dose)})` : ''}${FOOD_LABEL[t.food] ? `, ${FOOD_LABEL[t.food]}` : ''}${t.note ? ` · <i>${escapeHtml(t.note)}</i>` : ''}</span><button type="button" class="x" aria-label="Remove ${escapeHtml(t.name)}">×</button>`;
+    li.querySelector('input')!.addEventListener('change', (e) => {
+      const [h, m] = (e.target as HTMLInputElement).value.split(':').map(Number);
+      if (Number.isFinite(h)) Object.assign(t, { hour: h, minute: m || 0 });
+    });
+    li.querySelector('button')!.addEventListener('click', () => {
+      pending!.spec.tasks.splice(i, 1);
+      renderPreview();
+    });
+    list.appendChild(li);
+  });
+  $<HTMLButtonElement>('plantBtn').disabled = pending.spec.tasks.length === 0;
+}
 
 $('plantBtn').addEventListener('click', () => {
   if (!pending) return;
